@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
+    "target": "es2015",
+    "moduleResolution": "node",
+    "removeComments": false,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "lib": ["DOM", "ES2020"],
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    },
+    "declaration": true
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "src/**/*.spec.ts"
+  ],
+  "typedocOptions": {
+      "mode": "modules",
+      "out": "docs"
+  }
+}

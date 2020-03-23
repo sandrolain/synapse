@@ -1,0 +1,43 @@
+{
+  "name": "synapse",
+  "version": "0.0.1",
+  "description": "TS/JS library for data propagation",
+  "author": "Sandro Lain",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --env=jest-environment-happy-dom",
+    "build": "npx tsc",
+    "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
+    "prepublish": "npx tsc",
+    "build:docs": "npx typedoc --out ./typedocs ./src",
+    "serve:docs": "npm run build:docs && npx open-cli ./typedocs/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sandrolain/synapse.git"
+  },
+  "keywords": [
+    "reactive",
+    "emitter",
+    "observable",
+    "callback",
+    "javascript",
+    "typescript",
+    "library"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.2",
+    "eslint": "^6.8.0",
+    "happy-dom": "^0.12.1",
+    "jest": "^25.1.0",
+    "jest-environment-happy-dom": "0.0.41",
+    "light-server": "^2.6.4",
+    "open-cli": "^6.0.0",
+    "ts-jest": "^25.2.1",
+    "typedoc": "^0.17.3",
+    "typescript": "^3.8.3"
+  }
+}
