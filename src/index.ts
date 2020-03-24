@@ -1,5 +1,8 @@
 export type Subscriber = ((data: any) => void) | Emitter;
 export type Processor = (data: any) => any;
+export type ReduceFunction = (accumulatorData: any, itemData: any) => any;
+export type FilterFunction = (data: any) => boolean;
+export type MappingFunction = (data: any) => any;
 
 export interface IntervalData {
   /** The number of times the interval has called */
@@ -15,16 +18,32 @@ export interface IntervalData {
 export class Emitter {
   private subscriptions: Set<Subscriber> = new Set();
 
+  /**
+   * Create a new Emitter instance
+   * @param processor The *Processor* function that can convert data before the emission
+   */
   constructor (private processor: Processor = (data: any): any => data) {}
 
+  /**
+   * Add the passed {@link Subscriber} to the list of subscriptions that can receive the propagated data
+   * @param subscriber The *Subscriber* to add
+   */
   subscribe (subscriber: Subscriber): void {
     this.subscriptions.add(subscriber);
   }
 
+  /**
+   * Remove the passed {@link Subscriber} from the list of subscriptions
+   * @param subscriberThe *Subscriber* to remove
+   */
   unsubscribe (subscriber: Subscriber): void {
     this.subscriptions.delete(subscriber);
   }
 
+  /**
+   * Check if the passed {@link Subscriber} is member of the list of subscriptions
+   * @param subscriber The *Subscriber* to verify
+   */
   subscribed (subscriber: Subscriber): boolean {
     return this.subscriptions.has(subscriber);
   }
@@ -33,6 +52,9 @@ export class Emitter {
     return emitter.subscribe(this);
   }
 
+  /**
+   * Generate a new Promise that receive the next propagated data from the emitter
+   */
   promise (): Promise<any> {
     return new Promise(resolve => {
       const fn = (data: any): void => {
@@ -128,7 +150,7 @@ export class Emitter {
   }
 
   /**
-   *
+   * Stop previously started interval emitter
    */
   stopInterval (): void {
     if(this.tou) {
@@ -142,7 +164,11 @@ export class Emitter {
     }
   }
 
-  filter (filterFn: (data: any) => boolean): Emitter {
+  /**
+   * Generate a new {@link Emitter} that receive data filtered by a filter function
+   * @param filterFn {@link FilterFunction} that discriminate the data to propagate
+   */
+  filter (filterFn: FilterFunction): Emitter {
     const emitter = new Emitter();
 
     this.subscribe((data: any) => {
@@ -154,7 +180,11 @@ export class Emitter {
     return emitter;
   }
 
-  map (mapFn: (data: any) => any): Emitter {
+  /**
+   * Generate a new {@link Emitter} that receive data transformed by a mapping function
+   * @param mapFn {@link MappingFunction} function that return the new data to propagate
+   */
+  map (mapFn: MappingFunction): Emitter {
     const emitter = new Emitter();
 
     this.subscribe((data: any) => {
@@ -165,21 +195,30 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive data accumulated by a reduce function
+   * @param reduceFn {@link ReduceFunction} that return new accumulated data
+   * @param accumulatorData Data to use as initial basis for accumulated data
+   */
   reduce (
-    reduceFn: (accumData: any, itemData: any) => any,
-    accumData: any
+    reduceFn: ReduceFunction,
+    accumulatorData: any
   ): Emitter {
     const emitter = new Emitter();
 
     this.subscribe((data: any) => {
-      const newData = reduceFn(accumData, data);
-      accumData = newData;
+      const newData = reduceFn(accumulatorData, data);
+      accumulatorData = newData;
       emitter.emit(newData);
     });
 
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive data after a delay time
+   * @param delay The delay time (ms) before the data will be propagated
+   */
   delay (delay: number): Emitter {
     const emitter = new Emitter();
 
@@ -190,6 +229,10 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive data one time after the *releaseEmitter* has released the propagation
+   * @param releaseEmitter {@link Emitter} that permit the propagation
+   */
   debounce (releaseEmitter: Emitter): Emitter {
     const emitter = new Emitter();
     let ok: boolean = false;
@@ -208,6 +251,10 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive data one time after a predefined time
+   * @param time Time (ms) to wait before next propagation
+   */
   debounceTime (time: number): Emitter {
     const emitter = new Emitter();
     let ok: boolean = false;
@@ -227,6 +274,10 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive latest data collected when a *releaseEmitter* has released the propagation
+   * @param releaseEmitter {@link Emitter} that permit the propagation
+   */
   audit (releaseEmitter: Emitter): Emitter {
     const emitter = new Emitter();
     let lastData: any = null;
@@ -242,6 +293,10 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive latest data collected if a predefine time is elapsed without new propagation
+   * @param time Time (ms) to wait for the data propagation
+   */
   auditTime (time: number): Emitter {
     const emitter = new Emitter();
     let lastData: any = undefined;
@@ -262,6 +317,10 @@ export class Emitter {
     return emitter;
   }
 
+  /**
+   * Generate a new {@link Emitter} that receive an array of buffered data after the *releaseEmitter* has released the propagation
+   * @param releaseEmitter {@link Emitter} that permit the propagation
+   */
   buffer (releaseEmitter: Emitter): Emitter {
     const emitter = new Emitter();
     let bufferData: any[] = [];
