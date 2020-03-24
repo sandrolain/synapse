@@ -1,9 +1,14 @@
 export type Subscriber = ((data: any) => void) | Emitter;
 export type Processor = (data: any) => any;
+
 export interface IntervalData {
+  /** The number of times the interval has called */
   times: number;
+  /** The delay time (ms) before the first call of interval */
   delay: number;
+  /** The interval time (ms) between calls */
   interval: number;
+  /** The maximum number of times of interval can be called */
   maxTimes: number;
 }
 
@@ -50,6 +55,10 @@ export class Emitter {
     return processedData;
   }
 
+  /**
+   * Emit data to the attached subscribers
+   * @param data Data to propagate trough the attached subscribers
+   */
   async emit (data: any = null): Promise<void> {
     const processedData = await this.prepareData(data);
 
@@ -62,6 +71,10 @@ export class Emitter {
     }
   }
 
+  /**
+   * Emit a series of data values to the attached subscribers
+   * @param dataList An array of data values to emit singularly
+   */
   async emitAll (dataList: any[]): Promise<void> {
     for(const data of dataList) {
       await this.emit(data);
@@ -71,6 +84,13 @@ export class Emitter {
   private tou: number;
   private itv: number;
 
+  /**
+   * Emit a call to the attached subscribers with regular intervals.<br/>
+   * The data propagated to the subscribers is an object {@link IntervalData} with info about the interval emission
+   * @param delay The time (ms) to wait before the first emission
+   * @param interval The time (ms) of interval before emissions
+   * @param maxTimes (optional) If passed a value > 0, limit the number of emissions to maximum the specified value
+   */
   async emitInterval (
     delay: number,
     interval: number,
@@ -107,6 +127,9 @@ export class Emitter {
     }, delay);
   }
 
+  /**
+   *
+   */
   stopInterval (): void {
     if(this.tou) {
       window.clearTimeout(this.tou);

@@ -1,6 +1,5 @@
 import { Emitter } from "./index";
 
-
 type TestData = Record<string, string>;
 
 describe("Emitter module", () => {

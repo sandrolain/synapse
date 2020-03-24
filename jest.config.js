@@ -6,29 +6,29 @@ Object.assign(compilerOptions, {
 
 module.exports = {
   preset: "ts-jest",
-  roots: ['./src'],
+  roots: ["./src"],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    "^.+\\.tsx?$": "ts-jest"
   },
   coverageThreshold: {
-      global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80
-      }
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
+    }
   },
   collectCoverageFrom: [
-    '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/**/*.spec.ts',
+    "<rootDir>/src/**/*.ts",
+    "!<rootDir>/src/**/*.spec.ts"
   ],
   coverageDirectory: "./coverage",
-  coverageReporters: ['json', 'lcov', 'text', 'clover'],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  coverageReporters: ["json", "lcov", "text", "clover"],
+  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   testEnvironment: "jest-environment-happy-dom",
   globals: {
-    'ts-jest': {
+    "ts-jest": {
       tsConfig: compilerOptions
     }
   }
