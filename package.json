@@ -7,6 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --env=jest-environment-happy-dom",
+    "test:coverage": "jest --coverage --env=jest-environment-happy-dom && open ./coverage/lcov-report/index.html",
     "build": "npx tsc",
     "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
     "prepublish": "npx tsc",

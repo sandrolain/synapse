@@ -4,3 +4,4 @@ trash
 .DS_Store
 .vscode
 typedocs
+coverage
