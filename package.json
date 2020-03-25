@@ -10,9 +10,9 @@
     "test:coverage": "jest --coverage --env=jest-environment-happy-dom && open ./coverage/lcov-report/index.html",
     "build": "npx tsc",
     "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
-    "prepublish": "npx tsc",
     "build:docs": "npx typedoc --out ./typedocs ./src",
-    "serve:docs": "npm run build:docs && npx open-cli ./typedocs/index.html"
+    "serve:docs": "npm run build:docs && npx open-cli ./typedocs/index.html",
+    "prepare": "npx tsc"
   },
   "repository": {
     "type": "git",
