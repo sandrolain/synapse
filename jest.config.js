@@ -26,7 +26,7 @@ module.exports = {
   coverageReporters: ["json", "lcov", "text", "clover"],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  testEnvironment: "jest-environment-happy-dom",
+  testEnvironment: "jsdom",
   globals: {
     "ts-jest": {
       tsConfig: compilerOptions

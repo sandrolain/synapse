@@ -1,11 +1,21 @@
-import { Emitter } from "./index";
+/**
+ * @jest-environment jsdom
+ */
+
+import { Emitter, IntervalData } from "./index";
 
 type TestData = Record<string, string>;
+interface FooData {
+  foo: string;
+}
+interface NumberData {
+  value: number;
+}
 
 describe("Emitter module", () => {
 
   it("emit with callback", done => {
-    const subject = new Emitter();
+    const subject = new Emitter<FooData>();
 
     subject.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
@@ -18,8 +28,8 @@ describe("Emitter module", () => {
   });
 
   it("chain emit with callback", done => {
-    const subjectA = new Emitter();
-    const subjectB = new Emitter();
+    const subjectA = new Emitter<FooData>();
+    const subjectB = new Emitter<FooData>();
 
     subjectB.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
@@ -34,7 +44,7 @@ describe("Emitter module", () => {
   });
 
   it("emit with promise", done => {
-    const subject = new Emitter();
+    const subject = new Emitter<FooData>();
 
     const prom = subject.promise();
 
@@ -49,9 +59,9 @@ describe("Emitter module", () => {
   });
 
   it("emitAll() with callback", done => {
-    const subject = new Emitter();
+    const subject = new Emitter<TestData>();
 
-    const passedData: Record<string, string>[] = [];
+    const passedData: TestData[] = [];
 
     subject.subscribe(data => {
       passedData.push(data);
@@ -86,31 +96,8 @@ describe("Emitter module", () => {
     }, 1000);
   });
 
-  it("emitInterval() with callback", done => {
-    const subject = new Emitter();
-
-    const passedData: TestData[] = [];
-
-    subject.subscribe(data => {
-      passedData.push(data);
-    });
-
-    subject.emitInterval(0, 100, 5);
-
-    setTimeout(() => {
-      expect(passedData.length).toEqual(5);
-      expect(passedData.pop()).toMatchObject({
-        times: 5,
-        delay: 0,
-        interval: 100,
-        maxTimes: 5
-      });
-      done();
-    }, 1000);
-  });
-
   it("filter()", done => {
-    const subject = new Emitter();
+    const subject = new Emitter<TestData>();
 
     const passedData: TestData[] = [];
 
@@ -173,12 +160,12 @@ describe("Emitter module", () => {
   });
 
   it("reduce()", done => {
-    const subject = new Emitter();
+    const subject = new Emitter<NumberData>();
 
     let latestData: number;
 
     subject
-      .reduce((accum, data) => {
+      .reduce<number>((accum, data) => {
         return accum + data.value;
       }, 0)
       .subscribe(data => {
@@ -325,5 +312,50 @@ describe("Emitter module", () => {
         done();
       }, 1000);
     }, 500);
+  });
+
+  it("Emitter fromInterval()", done => {
+    const subject = Emitter.fromInterval(0, 100, 5);
+
+    const passedData: IntervalData[] = [];
+
+    subject.subscribe(data => {
+      passedData.push(data);
+    });
+
+    setTimeout(() => {
+      expect(passedData.length).toEqual(5);
+      expect(passedData.pop()).toMatchObject({
+        times: 5,
+        delay: 0,
+        interval: 100,
+        maxTimes: 5
+      });
+      done();
+    }, 600);
+  });
+
+  it("Emitter fromPromise()", done => {
+    const prom = new Promise<FooData>((ok) => {
+      setTimeout(() => ok({ foo: "bar" }), 200);
+    });
+    const subject = Emitter.fromPromise(prom);
+
+    subject.subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+  });
+
+  it("Emitter fromListener()", done => {
+    const $a = document.createElement("a");
+    const subject = Emitter.fromListener($a, "click");
+
+    subject.subscribe(data => {
+      expect(data).toBeInstanceOf(Event);
+      done();
+    });
+
+    $a.click();
   });
 });
