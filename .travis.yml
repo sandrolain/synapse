@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - lts/*
+#before_install
+#install:
+#before_script
+#script:
+#before_cache
+#after_success
+#after_failure
+#before_deploy
+#deploy
+#after_deploy
+#after_script
