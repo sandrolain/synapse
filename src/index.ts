@@ -1,5 +1,4 @@
-export type Subscriber<T> = ((data: T) => void) | Emitter;
-export type Processor<T> = (data: any) => T | Promise<T>;
+export type Subscriber<T> = ((data: T) => void) | Emitter<T>;
 export type ReduceFunction<A=any, B=any> = (accumulatorData: B, itemData: A) => B;
 export type FilterFunction<T=any> = (data: T) => boolean;
 export type MappingFunction<A=any, B=any> = (data: A) => B;
@@ -22,15 +21,17 @@ export class Emitter<T=any> {
 
   /**
    * Create a new Emitter instance
-   * @param processor The *Processor* function that can convert data before the emission
    */
-  constructor (private processor: Processor<T> = (data: T): T => data) {}
+  constructor () {}
 
   /**
    * Add the passed {@link Subscriber} to the list of subscriptions that can receive the propagated data
    * @param subscriber The *Subscriber* to add
    */
   subscribe (subscriber: Subscriber<T>): void {
+    if(subscriber === this) {
+      throw new Error("Circular Reference Error: passed Subscriber cannot be the same instance of Emitter");
+    }
     this.subscriptions.add(subscriber);
   }
 
@@ -50,7 +51,14 @@ export class Emitter<T=any> {
     return this.subscriptions.has(subscriber);
   }
 
+  /**
+   * Subscribe this *Emitter* to the passed *Emitter*
+   * @param emitter The *Emitter* to subscribe in
+   */
   subscribeTo (emitter: Emitter<T>): void {
+    if(emitter === this) {
+      throw new Error("Circular Reference Error: passed Emitter cannot be the same instance of Subscriber");
+    }
     return emitter.subscribe(this);
   }
 
@@ -67,25 +75,19 @@ export class Emitter<T=any> {
     });
   }
 
-  private async prepareData (data: any): Promise<T> {
-    let processedData = this.processor(data);
-    if(processedData instanceof Promise) {
-      processedData = await processedData;
-    }
-    return processedData;
-  }
-
   /**
    * Emit data to the attached subscribers
    * @param data Data to propagate trough the attached subscribers
    */
-  async emit (data: T = null): Promise<void> {
-    const processedData = await this.prepareData(data);
+  async emit (data: T | Promise<T> = null): Promise<void> {
+    if(data instanceof Promise) {
+      data = await data;
+    }
     for(const sub of this.subscriptions) {
       if(sub instanceof Emitter) {
-        sub.emit(processedData);
+        sub.emit(data);
       } else if(typeof sub === "function") {
-        sub.call(this, processedData);
+        sub.call(this, data);
       }
     }
   }
@@ -122,23 +124,21 @@ export class Emitter<T=any> {
         maxTimes
       });
 
-      if(maxTimes > 0 && maxTimes === times) {
-        return;
+      if(maxTimes <= 0 || times < maxTimes) {
+        this.itv = window.setInterval(() => {
+          times++;
+          this.itvFn({
+            times,
+            delay,
+            interval,
+            maxTimes
+          });
+
+          if(maxTimes > 0 && maxTimes === times) {
+            this.stopInterval();
+          }
+        }, interval);
       }
-
-      this.itv = window.setInterval(() => {
-        times++;
-        this.itvFn({
-          times,
-          delay,
-          interval,
-          maxTimes
-        });
-
-        if(maxTimes > 0 && maxTimes === times) {
-          this.stopInterval();
-        }
-      }, interval);
     }, delay);
   }
 
@@ -260,9 +260,10 @@ export class Emitter<T=any> {
       }
 
       clearTimeout(emitterTO);
-
       emitterTO = setTimeout(() => (ok = true), time);
     });
+
+    emitterTO = setTimeout(() => (ok = true), time);
 
     return emitter;
   }
