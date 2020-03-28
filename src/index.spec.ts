@@ -14,6 +14,46 @@ interface NumberData {
 
 describe("Emitter module", () => {
 
+  it("check if callback is subscribed", done => {
+    const subject = new Emitter<FooData>();
+
+    const subscriber = (data: any): void => {
+      data;
+    };
+    const notSubscriber = (data: any): void => {
+      data;
+    };
+
+    subject.subscribe(subscriber);
+
+    const subscribed = subject.subscribed(subscriber);
+    const notSubscribed = subject.subscribed(notSubscriber);
+
+    expect(subscribed).toBeTruthy();
+    expect(notSubscribed).toBeFalsy();
+    done();
+  });
+
+  it("Emitter cannot subscribe() itself", done => {
+    const subject = new Emitter<FooData>();
+    try {
+      subject.subscribe(subject);
+    } catch(e) {
+      return done();
+    }
+    done.fail(new Error("Emitter should not subscribe to itself"));
+  });
+
+  it("Emitter cannot subscribeTO() to itself", done => {
+    const subject = new Emitter<FooData>();
+    try {
+      subject.subscribeTo(subject);
+    } catch(e) {
+      return done();
+    }
+    done.fail(new Error("Emitter should not subscribe to itself"));
+  });
+
   it("emit with callback", done => {
     const subject = new Emitter<FooData>();
 
@@ -27,7 +67,20 @@ describe("Emitter module", () => {
     });
   });
 
-  it("chain emit with callback", done => {
+  it("emit Promise with callback", done => {
+    const subject = new Emitter<FooData>();
+
+    subject.subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    subject.emit(Promise.resolve({
+      foo: "bar"
+    }));
+  });
+
+  it("chain emit with subscribe() into an Emitter", done => {
     const subjectA = new Emitter<FooData>();
     const subjectB = new Emitter<FooData>();
 
@@ -37,6 +90,22 @@ describe("Emitter module", () => {
     });
 
     subjectA.subscribe(subjectB);
+
+    subjectA.emit({
+      foo: "bar"
+    });
+  });
+
+  it("chain emit with subscribeTo() an Emitter", done => {
+    const subjectA = new Emitter<FooData>();
+    const subjectB = new Emitter<FooData>();
+
+    subjectB.subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    subjectB.subscribeTo(subjectA);
 
     subjectA.emit({
       foo: "bar"
@@ -314,7 +383,46 @@ describe("Emitter module", () => {
     }, 500);
   });
 
-  it("Emitter fromInterval()", done => {
+  it("debounce()", done => {
+    const subjectA = new Emitter();
+    const releaser = new Emitter();
+
+    subjectA.debounce(releaser).subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    subjectA.emit({
+      foo: "foo"
+    });
+
+    releaser.emit();
+
+    subjectA.emit({
+      foo: "bar"
+    });
+  });
+
+  it("debounceTime()", done => {
+    const subjectA = new Emitter();
+
+    subjectA.debounceTime(200).subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    subjectA.emit({
+      foo: "foo"
+    });
+
+    setTimeout(() => {
+      subjectA.emit({
+        foo: "bar"
+      });
+    }, 300);
+  });
+
+  it("Emitter fromInterval() with maxTimes", done => {
     const subject = Emitter.fromInterval(0, 100, 5);
 
     const passedData: IntervalData[] = [];
@@ -330,6 +438,30 @@ describe("Emitter module", () => {
         delay: 0,
         interval: 100,
         maxTimes: 5
+      });
+      done();
+    }, 600);
+  });
+
+  it("Emitter fromInterval() unlimited", done => {
+    const subject = Emitter.fromInterval(0, 100);
+
+    const passedData: IntervalData[] = [];
+
+    subject.subscribe(data => {
+      passedData.push(data);
+      if(data.times === 5) {
+        subject.stopInterval();
+      }
+    });
+
+    setTimeout(() => {
+      expect(passedData.length).toEqual(5);
+      expect(passedData.pop()).toMatchObject({
+        times: 5,
+        delay: 0,
+        interval: 100,
+        maxTimes: 0
       });
       done();
     }, 600);

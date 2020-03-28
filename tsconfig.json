@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "ES6",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
@@ -15,12 +15,14 @@
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     },
-    "declaration": true
+    "declaration": true,
+    "declarationDir": "./dist"
   },
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "dist"
   ],
   "typedocOptions": {
     "mode": "modules",
