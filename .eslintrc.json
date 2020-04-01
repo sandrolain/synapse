@@ -14,7 +14,7 @@
   },
   "rules": {
     "no-console": "warn",
-    "quotes": ["error", "double"],
+    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
     "no-inline-comments": "warn",
     "semi": [2, "always"],
     "indent": ["warn", 2],
