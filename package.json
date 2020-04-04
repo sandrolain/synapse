@@ -10,11 +10,12 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html",
-    "build": "npx tsc",
+    "docs:build": "npx typedoc --out ./typedocs ./src",
+    "docs:serve": "npm run build:docs && npx open-cli ./typedocs/index.html",
     "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
-    "build:docs": "npx typedoc --out ./typedocs ./src",
-    "serve:docs": "npm run build:docs && npx open-cli ./typedocs/index.html",
-    "prepare": "npx tsc"
+    "build": "npx rollup -c",
+    "watch": "npx rollup -cw",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

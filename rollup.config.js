@@ -7,11 +7,13 @@ export default {
   output: [
     {
       file: pkg.main,
-      format: "umd"
+      format: "umd",
+      name: "synapse"
     },
     {
       file: pkg.module,
-      format: "es"
+      format: "es",
+      name: "synapse"
     }
   ],
   plugins: [
