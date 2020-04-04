@@ -14,15 +14,46 @@ export interface IntervalData {
   maxTimes: number;
 }
 
+// TODO: docs
 export type IntervalCallback = (data: IntervalData) => void;
 
+// TODO: docs
+export interface EmitterOptions {
+  replay?: boolean;
+  replayMax?: number;
+  startCallback?: () => any;
+  stopCallback?: () => any;
+}
+
+// TODO: docs
 export class Emitter<T=any> {
   private subscriptions: Set<Subscriber<T>> = new Set();
+  private options: EmitterOptions = {
+    replay: false,
+    replayMax: 0,
+    startCallback: null,
+    stopCallback: null
+  };
+  private replayCache: T[] = [];
 
   /**
    * Create a new Emitter instance
    */
-  constructor () {}
+  constructor (options: EmitterOptions = {}) {
+    this.setOptions(options);
+  }
+
+  // TODO: docs
+  setOptions (options: EmitterOptions = {}): void {
+    Object.assign(this.options, options);
+  }
+
+  private getChildEmitter<R> (): Emitter<R> {
+    return new Emitter({
+      replay: this.options.replay,
+      replayMax: this.options.replayMax
+    });
+  }
 
   /**
    * Add the passed {@link Subscriber} to the list of subscriptions that can receive the propagated data
@@ -32,7 +63,12 @@ export class Emitter<T=any> {
     if(subscriber === this) {
       throw new Error("Circular Reference Error: passed Subscriber cannot be the same instance of Emitter");
     }
+
     this.subscriptions.add(subscriber);
+
+    for(const data of this.replayCache) {
+      this.propagateEmit(subscriber, data);
+    }
   }
 
   /**
@@ -83,12 +119,22 @@ export class Emitter<T=any> {
     if(data instanceof Promise) {
       data = await data;
     }
-    for(const sub of this.subscriptions) {
-      if(sub instanceof Emitter) {
-        sub.emit(data);
-      } else if(typeof sub === "function") {
-        sub.call(this, data);
+    if(this.options.replay) {
+      this.replayCache.push(data);
+      if(this.options.replayMax > 0) {
+        this.replayCache = this.replayCache.slice(-this.options.replayMax);
       }
+    }
+    for(const sub of this.subscriptions) {
+      this.propagateEmit(sub, data);
+    }
+  }
+
+  private propagateEmit (sub: Subscriber<T>, data: T): void {
+    if(sub instanceof Emitter) {
+      sub.emit(data);
+    } else if(typeof sub === "function") {
+      sub.call(this, data);
     }
   }
 
@@ -162,7 +208,7 @@ export class Emitter<T=any> {
    * @param filterFn {@link FilterFunction} that discriminate the data to propagate
    */
   filter (filterFn: FilterFunction<T>): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
 
     this.subscribe((data: T) => {
       if(filterFn(data)) {
@@ -178,7 +224,7 @@ export class Emitter<T=any> {
    * @param mapFn {@link MappingFunction} function that return the new data to propagate
    */
   map<R=any> (mapFn: MappingFunction<T, R>): Emitter<R> {
-    const emitter = new Emitter<R>();
+    const emitter = this.getChildEmitter<R>();
 
     this.subscribe((data: T): void => {
       const newData = mapFn(data) as R;
@@ -197,7 +243,7 @@ export class Emitter<T=any> {
     reduceFn: ReduceFunction<T, R>,
     accumulatorData: any
   ): Emitter<R> {
-    const emitter = new Emitter<R>();
+    const emitter = this.getChildEmitter<R>();
 
     this.subscribe((data: any) => {
       const newData = reduceFn(accumulatorData, data) as R;
@@ -213,7 +259,7 @@ export class Emitter<T=any> {
    * @param delay The delay time (ms) before the data will be propagated
    */
   delay (delay: number): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
 
     this.subscribe((data: any) => {
       setTimeout(() => emitter.emit(data), delay);
@@ -227,7 +273,7 @@ export class Emitter<T=any> {
    * @param releaseEmitter {@link Emitter} that permit the propagation
    */
   debounce (releaseEmitter: Emitter): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
     let ok: boolean = false;
 
     this.subscribe((data: any) => {
@@ -249,7 +295,7 @@ export class Emitter<T=any> {
    * @param time Time (ms) to wait before next propagation
    */
   debounceTime (time: number): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
     let ok: boolean = false;
     let emitterTO: any;
 
@@ -273,7 +319,7 @@ export class Emitter<T=any> {
    * @param releaseEmitter {@link Emitter} that permit the propagation
    */
   audit (releaseEmitter: Emitter): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
     let lastData: any = null;
 
     this.subscribe((data: any) => {
@@ -292,7 +338,7 @@ export class Emitter<T=any> {
    * @param time Time (ms) to wait for the data propagation
    */
   auditTime (time: number): Emitter<T> {
-    const emitter = new Emitter<T>();
+    const emitter = this.getChildEmitter<T>();
     let lastData: any = undefined;
     let emitterTO: any;
 
@@ -316,7 +362,7 @@ export class Emitter<T=any> {
    * @param releaseEmitter {@link Emitter} that permit the propagation
    */
   buffer (releaseEmitter: Emitter): Emitter<T[]> {
-    const emitter = new Emitter<T[]>();
+    const emitter = this.getChildEmitter<T[]>();
     let bufferData: T[] = [];
 
     this.subscribe((data: any) => {
@@ -332,14 +378,32 @@ export class Emitter<T=any> {
     return emitter;
   }
 
+  // TODO: docs
+  start (): boolean {
+    if(this.options.startCallback) {
+      this.options.startCallback();
+      return true;
+    }
+    return false;
+  }
+
+  // TODO: docs
+  stop (): boolean {
+    if(this.options.stopCallback) {
+      this.options.stopCallback();
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Generate an {@link Emitter} that emit a call when a new event is fired
    * @param $element HTML DOM node to attach the event listener
    * @param eventType Name of the event
    */
   static fromListener ($element: HTMLElement, eventType: string): Emitter<Event> {
-    const emitter = new Emitter();
-    $element.addEventListener(eventType, (event) => emitter.emit(event));
+    const emitter = new Emitter<Event>();
+    $element.addEventListener(eventType, (event: Event) => emitter.emit(event));
     return emitter;
   }
 
@@ -366,4 +430,57 @@ export class Emitter<T=any> {
     emitter.startInterval(delay, interval, maxTimes);
     return emitter;
   }
+
+  // TODO: docs
+  static fromStorage (itemName: string): Emitter<string> {
+    const emitter = new Emitter<string>();
+    const eventCallback = (event: StorageEvent): void => {
+      const value = event.storageArea.getItem(itemName);
+      emitter.emit(value);
+    };
+    window.addEventListener("storage", eventCallback);
+    emitter.setOptions({
+      stopCallback: (): void => {
+        window.removeEventListener("storage", eventCallback);
+      }
+    });
+    return emitter;
+  }
+
+  // TODO: docs
+  static fromCookie (cookieName: string, interval: number = 500): Emitter<string> {
+    return this.fromObserver<string>((): string => {
+      const parts = `; ${document.cookie}`.split(`; ${cookieName}=`);
+      if(parts.length === 2) {
+        return parts.pop().split(";").shift();
+      }
+      return null;
+    }, interval);
+  }
+
+  // TODO: docs
+  static fromObserver<T> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
+    const emitter = new Emitter<T>();
+    let lastValue: T;
+    let intervalTO: number;
+    emitter.setOptions({
+      startCallback: (): void => {
+        intervalTO = window.setInterval(async () => {
+          let newValue = observeFn();
+          if(newValue instanceof Promise) {
+            newValue = await newValue;
+          }
+          if(newValue !== lastValue) {
+            lastValue = newValue;
+            emitter.emit(newValue);
+          }
+        }, interval);
+      },
+      stopCallback: (): void => {
+        window.clearInterval(intervalTO);
+      }
+    });
+    return emitter;
+  }
 }
+
