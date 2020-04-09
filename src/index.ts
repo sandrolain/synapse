@@ -2,6 +2,7 @@ export type Subscriber<T> = ((data: T) => void) | Emitter<T>;
 export type ReduceFunction<A=any, B=any> = (accumulatorData: B, itemData: A) => B;
 export type FilterFunction<T=any> = (data: T) => boolean;
 export type MappingFunction<A=any, B=any> = (data: A) => B;
+export type ListenerTarget = Window | Document | Element;
 
 export interface IntervalData {
   /** The number of times the interval has called */
@@ -26,6 +27,20 @@ export interface EmitterOptions {
 }
 
 // TODO: docs
+// TODO: test
+export class Subscription<T> {
+  constructor (
+    readonly emitter: Emitter<T>,
+    readonly subscriber: Subscriber<T>
+  ) {}
+
+  unsubcribe (): void {
+    return this.emitter.unsubscribe(this.subscriber);
+  }
+}
+
+
+// TODO: docs
 export class Emitter<T=any> {
   private subscriptions: Set<Subscriber<T>> = new Set();
   private options: EmitterOptions = {
@@ -46,6 +61,14 @@ export class Emitter<T=any> {
   // TODO: docs
   setOptions (options: EmitterOptions = {}): void {
     Object.assign(this.options, options);
+    this.updateReplayCache();
+  }
+
+  // TODO: test
+  private updateReplayCache (): void {
+    if(this.options.replayMax > 0) {
+      this.replayCache = this.replayCache.slice(-this.options.replayMax);
+    }
   }
 
   private getChildEmitter<R> (): Emitter<R> {
@@ -59,7 +82,7 @@ export class Emitter<T=any> {
    * Add the passed {@link Subscriber} to the list of subscriptions that can receive the propagated data
    * @param subscriber The *Subscriber* to add
    */
-  subscribe (subscriber: Subscriber<T>): void {
+  subscribe (subscriber: Subscriber<T>): Subscription<T> {
     if(subscriber === this) {
       throw new Error("Circular Reference Error: passed Subscriber cannot be the same instance of Emitter");
     }
@@ -69,6 +92,8 @@ export class Emitter<T=any> {
     for(const data of this.replayCache) {
       this.propagateEmit(subscriber, data);
     }
+
+    return new Subscription<T>(this, subscriber);
   }
 
   /**
@@ -91,7 +116,7 @@ export class Emitter<T=any> {
    * Subscribe this *Emitter* to the passed *Emitter*
    * @param emitter The *Emitter* to subscribe in
    */
-  subscribeTo (emitter: Emitter<T>): void {
+  subscribeTo (emitter: Emitter<T>): Subscription<T> {
     if(emitter === this) {
       throw new Error("Circular Reference Error: passed Emitter cannot be the same instance of Subscriber");
     }
@@ -119,11 +144,10 @@ export class Emitter<T=any> {
     if(data instanceof Promise) {
       data = await data;
     }
+    // TODO: test
     if(this.options.replay) {
       this.replayCache.push(data);
-      if(this.options.replayMax > 0) {
-        this.replayCache = this.replayCache.slice(-this.options.replayMax);
-      }
+      this.updateReplayCache();
     }
     for(const sub of this.subscriptions) {
       this.propagateEmit(sub, data);
@@ -145,61 +169,6 @@ export class Emitter<T=any> {
   async emitAll (dataList: T[]): Promise<void> {
     for(const data of dataList) {
       await this.emit(data);
-    }
-  }
-
-  private tou: number;
-  private itv: number;
-  private itvFn: IntervalCallback
-
-  // TODO: docs
-  setIntervalCallback (callback: IntervalCallback): void {
-    this.itvFn = callback;
-  }
-
-  // TODO: docs
-  startInterval (delay: number, interval: number, maxTimes: number = 0): void {
-    let times = 0;
-
-    this.tou = window.setTimeout(() => {
-      times++;
-      this.itvFn({
-        times,
-        delay,
-        interval,
-        maxTimes
-      });
-
-      if(maxTimes <= 0 || times < maxTimes) {
-        this.itv = window.setInterval(() => {
-          times++;
-          this.itvFn({
-            times,
-            delay,
-            interval,
-            maxTimes
-          });
-
-          if(maxTimes > 0 && maxTimes === times) {
-            this.stopInterval();
-          }
-        }, interval);
-      }
-    }, delay);
-  }
-
-  /**
-   * Stop previously started interval emitter
-   */
-  stopInterval (): void {
-    if(this.tou) {
-      window.clearTimeout(this.tou);
-      this.tou = null;
-    }
-
-    if(this.itv) {
-      window.clearInterval(this.itv);
-      this.itv = null;
     }
   }
 
@@ -262,7 +231,7 @@ export class Emitter<T=any> {
     const emitter = this.getChildEmitter<T>();
 
     this.subscribe((data: any) => {
-      setTimeout(() => emitter.emit(data), delay);
+      window.setTimeout(() => emitter.emit(data), delay);
     });
 
     return emitter;
@@ -305,11 +274,11 @@ export class Emitter<T=any> {
         ok = false;
       }
 
-      clearTimeout(emitterTO);
-      emitterTO = setTimeout(() => (ok = true), time);
+      window.clearTimeout(emitterTO);
+      emitterTO = window.setTimeout(() => (ok = true), time);
     });
 
-    emitterTO = setTimeout(() => (ok = true), time);
+    emitterTO = window.setTimeout(() => (ok = true), time);
 
     return emitter;
   }
@@ -345,9 +314,9 @@ export class Emitter<T=any> {
     this.subscribe((data: any) => {
       lastData = data;
 
-      clearTimeout(emitterTO);
+      window.clearTimeout(emitterTO);
 
-      emitterTO = setTimeout(() => {
+      emitterTO = window.setTimeout(() => {
         if(lastData !== undefined) {
           emitter.emit(lastData);
         }
@@ -379,31 +348,53 @@ export class Emitter<T=any> {
   }
 
   // TODO: docs
-  start (): boolean {
+  start (): Emitter<T> {
     if(this.options.startCallback) {
       this.options.startCallback();
-      return true;
     }
-    return false;
+    return this;
   }
 
   // TODO: docs
-  stop (): boolean {
+  stop (): Emitter<T> {
     if(this.options.stopCallback) {
       this.options.stopCallback();
-      return true;
     }
-    return false;
+    return this;
+  }
+
+  // TODO: test
+  // TODO: docs
+  thenDispatch (eventName: string, target: Window = window): Subscription<T> {
+    return this.subscribe((data: T) => {
+      const event = new CustomEvent(eventName, {
+        detail: data,
+        bubbles: true,
+        cancelable: false,
+        composed: true
+      });
+      target.dispatchEvent(event);
+    });
   }
 
   /**
    * Generate an {@link Emitter} that emit a call when a new event is fired
-   * @param $element HTML DOM node to attach the event listener
    * @param eventType Name of the event
+   * @param target Window, Document or Element node to attach the event listener
    */
-  static fromListener ($element: HTMLElement, eventType: string): Emitter<Event> {
+  static fromListener (eventType: string, target: ListenerTarget = window): Emitter<Event> {
     const emitter = new Emitter<Event>();
-    $element.addEventListener(eventType, (event: Event) => emitter.emit(event));
+    const fn = (event: Event): void => {
+      emitter.emit(event);
+    };
+    emitter.setOptions({
+      startCallback: (): void => {
+        target.addEventListener(eventType, fn, true);
+      },
+      stopCallback: (): void => {
+        target.removeEventListener(eventType, fn, true);
+      }
+    });
     return emitter;
   }
 
@@ -426,11 +417,62 @@ export class Emitter<T=any> {
    */
   static fromInterval (delay: number, interval: number, maxTimes: number = 0): Emitter<IntervalData> {
     const emitter = new Emitter<IntervalData>();
-    emitter.setIntervalCallback((data: IntervalData) => emitter.emit(data));
-    emitter.startInterval(delay, interval, maxTimes);
+    const itvFn   = (data: IntervalData): void => {
+      emitter.emit(data);
+    };
+
+    let tou: number;
+    let itv: number;
+
+    const stopCallback = (): void => {
+      if(tou) {
+        window.clearTimeout(tou);
+        tou = null;
+      }
+
+      if(itv) {
+        window.clearInterval(itv);
+        itv = null;
+      }
+    };
+
+    emitter.setOptions({
+      startCallback: (): void => {
+        let times = 0;
+
+        tou = window.setTimeout(() => {
+          times++;
+          itvFn({
+            times,
+            delay,
+            interval,
+            maxTimes
+          });
+
+          if(maxTimes <= 0 || times < maxTimes) {
+            itv = window.setInterval(() => {
+              times++;
+              itvFn({
+                times,
+                delay,
+                interval,
+                maxTimes
+              });
+
+              if(maxTimes > 0 && maxTimes === times) {
+                stopCallback();
+              }
+            }, interval);
+          }
+        }, delay);
+      },
+      stopCallback
+    });
+
     return emitter;
   }
 
+  // TODO: test
   // TODO: docs
   static fromStorage (itemName: string): Emitter<string> {
     const emitter = new Emitter<string>();
@@ -438,8 +480,10 @@ export class Emitter<T=any> {
       const value = event.storageArea.getItem(itemName);
       emitter.emit(value);
     };
-    window.addEventListener("storage", eventCallback);
     emitter.setOptions({
+      startCallback: (): void => {
+        window.addEventListener("storage", eventCallback);
+      },
       stopCallback: (): void => {
         window.removeEventListener("storage", eventCallback);
       }
@@ -447,6 +491,7 @@ export class Emitter<T=any> {
     return emitter;
   }
 
+  // TODO: test
   // TODO: docs
   static fromCookie (cookieName: string, interval: number = 500): Emitter<string> {
     return this.fromObserver<string>((): string => {
@@ -458,6 +503,16 @@ export class Emitter<T=any> {
     }, interval);
   }
 
+  // TODO: test
+  // TODO: docs
+  static fromSearchParam (paramName: string, interval: number = 500): Emitter<string> {
+    return this.fromObserver<string>((): string => {
+      const params = new URLSearchParams(window.location.search.slice(1));
+      return params.get(paramName);
+    }, interval);
+  }
+
+  // TODO: test
   // TODO: docs
   static fromObserver<T> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
     const emitter = new Emitter<T>();
@@ -482,5 +537,22 @@ export class Emitter<T=any> {
     });
     return emitter;
   }
-}
 
+  // TODO: test
+  // TODO: docs
+  fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
+    const emitter = new Emitter<T>();
+    const fn = (event: MessageEvent): void => {
+      emitter.emit(event.data as T);
+    };
+    emitter.setOptions({
+      startCallback: (): void => {
+        ws.addEventListener("message", fn);
+      },
+      stopCallback: (): void => {
+        ws.removeEventListener("message", fn);
+      }
+    });
+    return emitter;
+  }
+}

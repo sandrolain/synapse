@@ -423,7 +423,7 @@ describe("Emitter module", () => {
   });
 
   it("Emitter fromInterval() with maxTimes", done => {
-    const subject = Emitter.fromInterval(0, 100, 5);
+    const subject = Emitter.fromInterval(0, 100, 5).start();
 
     const passedData: IntervalData[] = [];
 
@@ -444,14 +444,14 @@ describe("Emitter module", () => {
   });
 
   it("Emitter fromInterval() unlimited", done => {
-    const subject = Emitter.fromInterval(0, 100);
+    const subject = Emitter.fromInterval(0, 100).start();
 
     const passedData: IntervalData[] = [];
 
     subject.subscribe(data => {
       passedData.push(data);
       if(data.times === 5) {
-        subject.stopInterval();
+        subject.stop();
       }
     });
 
@@ -481,7 +481,7 @@ describe("Emitter module", () => {
 
   it("Emitter fromListener()", done => {
     const $a = document.createElement("a");
-    const subject = Emitter.fromListener($a, "click");
+    const subject = Emitter.fromListener("click", $a).start();
 
     subject.subscribe(data => {
       expect(data).toBeInstanceOf(Event);
