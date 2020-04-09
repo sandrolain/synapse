@@ -1,18 +1,23 @@
 {
   "name": "synapse",
   "version": "0.0.1",
-  "description": "TS/JS library for data propagation",
+  "description": "Tiny library for data propagation",
   "author": "Sandro Lain",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/umd/index.d.ts",
+  "files": [
+    "dist/cjs/*",
+    "dist/esm/*",
+    "dist/umd/*"
+  ],
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html",
     "docs:build": "npx typedoc --out ./typedocs ./src",
     "docs:serve": "npm run build:docs && npx open-cli ./typedocs/index.html",
-    "serve": "npx tsc && npx light-server -s . -p 5678 -o http://localhost:5678/demo -w \"src/**/*.*, demo/*.* # npx tsc\"",
+    "serve": "npm run build && npx live-server --port=5678 --open=/demo/index.html --watch=./dist,./demo",
     "build": "npx rollup -c",
     "watch": "npx rollup -cw",
     "prepare": "npm run build"
@@ -33,19 +38,20 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^13.9.8",
-    "@typescript-eslint/eslint-plugin": "^2.26.0",
-    "@typescript-eslint/parser": "^2.26.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.1",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
     "eslint": "^6.8.0",
     "happy-dom": "^0.12.1",
-    "jest": "^25.2.4",
-    "light-server": "^2.6.4",
+    "jest": "^25.3.0",
+    "live-server": "^1.2.1",
     "open-cli": "^6.0.1",
-    "rollup": "^2.3.2",
+    "rollup": "^2.3.4",
+    "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.0",
-    "ts-jest": "^25.3.0",
-    "typedoc": "^0.17.3",
+    "ts-jest": "^25.3.1",
+    "typedoc": "^0.17.4",
     "typescript": "^3.8.3"
   }
 }
