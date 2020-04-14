@@ -376,183 +376,188 @@ export class Emitter<T=any> {
       target.dispatchEvent(event);
     });
   }
+}
 
-  /**
-   * Generate an {@link Emitter} that emit a call when a new event is fired
-   * @param eventType Name of the event
-   * @param target Window, Document or Element node to attach the event listener
-   */
-  static fromListener (eventType: string, target: ListenerTarget = window): Emitter<Event> {
-    const emitter = new Emitter<Event>();
-    const fn = (event: Event): void => {
-      emitter.emit(event);
-    };
-    emitter.setOptions({
-      startCallback: (): void => {
-        target.addEventListener(eventType, fn, true);
-      },
-      stopCallback: (): void => {
-        target.removeEventListener(eventType, fn, true);
-      }
-    });
-    return emitter;
-  }
 
-  /**
-   * Generate an {@link Emitter} that emit a call when the promise resolves
-   * @param promise The Promise that trigger
-   */
-  static fromPromise<R = any> (promise: Promise<R>): Emitter<R | Error> {
-    const emitter = new Emitter<R | Error>();
-    promise.then((data: R) => emitter.emit(data), (err) => err);
-    return emitter;
-  }
 
-  /**
-   * Generate an {@link Emitter} that emit a call to the attached subscribers with regular intervals.<br/>
-   * The data propagated to the subscribers is an object {@link IntervalData} with info about the interval emission
-   * @param delay The time (ms) to wait before the first emission
-   * @param interval The time (ms) of interval before emissions
-   * @param maxTimes (optional) If passed a value > 0, limit the number of emissions to maximum the specified value
-   */
-  static fromInterval (delay: number, interval: number, maxTimes: number = 0): Emitter<IntervalData> {
-    const emitter = new Emitter<IntervalData>();
-    const itvFn   = (data: IntervalData): void => {
-      emitter.emit(data);
-    };
+/**
+ * Generate an {@link Emitter} that emit a call when a new event is fired
+ * @param eventType Name of the event
+ * @param target Window, Document or Element node to attach the event listener
+ */
+export function fromListener (eventType: string, target: ListenerTarget = window): Emitter<Event> {
+  const emitter = new Emitter<Event>();
+  const fn = (event: Event): void => {
+    emitter.emit(event);
+  };
+  emitter.setOptions({
+    startCallback: (): void => {
+      target.addEventListener(eventType, fn, true);
+    },
+    stopCallback: (): void => {
+      target.removeEventListener(eventType, fn, true);
+    }
+  });
+  return emitter;
+}
 
-    let tou: number;
-    let itv: number;
+/**
+ * Generate an {@link Emitter} that emit a call when the promise resolves
+ * @param promise The Promise that trigger
+ */
+export function fromPromise<R = any> (promise: Promise<R>): Emitter<R | Error> {
+  const emitter = new Emitter<R | Error>();
+  promise.then((data: R) => emitter.emit(data), (err) => err);
+  return emitter;
+}
 
-    const stopCallback = (): void => {
-      if(tou) {
-        window.clearTimeout(tou);
-        tou = null;
-      }
+/**
+ * Generate an {@link Emitter} that emit a call to the attached subscribers with regular intervals.<br/>
+ * The data propagated to the subscribers is an object {@link IntervalData} with info about the interval emission
+ * @param delay The time (ms) to wait before the first emission
+ * @param interval The time (ms) of interval before emissions
+ * @param maxTimes (optional) If passed a value > 0, limit the number of emissions to maximum the specified value
+ */
+export function fromInterval (delay: number, interval: number, maxTimes: number = 0): Emitter<IntervalData> {
+  const emitter = new Emitter<IntervalData>();
+  const itvFn   = (data: IntervalData): void => {
+    emitter.emit(data);
+  };
 
-      if(itv) {
-        window.clearInterval(itv);
-        itv = null;
-      }
-    };
+  let tou: number;
+  let itv: number;
 
-    emitter.setOptions({
-      startCallback: (): void => {
-        let times = 0;
+  const stopCallback = (): void => {
+    if(tou) {
+      window.clearTimeout(tou);
+      tou = null;
+    }
 
-        tou = window.setTimeout(() => {
-          times++;
-          itvFn({
-            times,
-            delay,
-            interval,
-            maxTimes
-          });
+    if(itv) {
+      window.clearInterval(itv);
+      itv = null;
+    }
+  };
 
-          if(maxTimes <= 0 || times < maxTimes) {
-            itv = window.setInterval(() => {
-              times++;
-              itvFn({
-                times,
-                delay,
-                interval,
-                maxTimes
-              });
+  emitter.setOptions({
+    startCallback: (): void => {
+      let times = 0;
 
-              if(maxTimes > 0 && maxTimes === times) {
-                stopCallback();
-              }
-            }, interval);
-          }
-        }, delay);
-      },
-      stopCallback
-    });
+      tou = window.setTimeout(() => {
+        times++;
+        itvFn({
+          times,
+          delay,
+          interval,
+          maxTimes
+        });
 
-    return emitter;
-  }
+        if(maxTimes <= 0 || times < maxTimes) {
+          itv = window.setInterval(() => {
+            times++;
+            itvFn({
+              times,
+              delay,
+              interval,
+              maxTimes
+            });
 
-  // TODO: test
-  // TODO: docs
-  static fromStorage (itemName: string): Emitter<string> {
-    const emitter = new Emitter<string>();
-    const eventCallback = (event: StorageEvent): void => {
-      const value = event.storageArea.getItem(itemName);
-      emitter.emit(value);
-    };
-    emitter.setOptions({
-      startCallback: (): void => {
-        window.addEventListener("storage", eventCallback);
-      },
-      stopCallback: (): void => {
-        window.removeEventListener("storage", eventCallback);
-      }
-    });
-    return emitter;
-  }
+            if(maxTimes > 0 && maxTimes === times) {
+              stopCallback();
+            }
+          }, interval);
+        }
+      }, delay);
+    },
+    stopCallback
+  });
 
-  // TODO: test
-  // TODO: docs
-  static fromCookie (cookieName: string, interval: number = 500): Emitter<string> {
-    return this.fromObserver<string>((): string => {
-      const parts = `; ${document.cookie}`.split(`; ${cookieName}=`);
-      if(parts.length === 2) {
-        return parts.pop().split(";").shift();
-      }
-      return null;
-    }, interval);
-  }
+  return emitter;
+}
 
-  // TODO: test
-  // TODO: docs
-  static fromSearchParam (paramName: string, interval: number = 500): Emitter<string> {
-    return this.fromObserver<string>((): string => {
-      const params = new URLSearchParams(window.location.search.slice(1));
-      return params.get(paramName);
-    }, interval);
-  }
+// TODO: test
+// TODO: docs
+export function fromStorage (itemName: string): Emitter<string> {
+  const emitter = new Emitter<string>();
+  const eventCallback = (event: StorageEvent): void => {
+    const value = event.storageArea.getItem(itemName);
+    emitter.emit(value);
+  };
+  emitter.setOptions({
+    startCallback: (): void => {
+      window.addEventListener("storage", eventCallback);
+    },
+    stopCallback: (): void => {
+      window.removeEventListener("storage", eventCallback);
+    }
+  });
+  return emitter;
+}
 
-  // TODO: test
-  // TODO: docs
-  static fromObserver<T> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
-    const emitter = new Emitter<T>();
-    let lastValue: T;
-    let intervalTO: number;
-    emitter.setOptions({
-      startCallback: (): void => {
-        intervalTO = window.setInterval(async () => {
-          let newValue = observeFn();
-          if(newValue instanceof Promise) {
-            newValue = await newValue;
-          }
-          if(newValue !== lastValue) {
-            lastValue = newValue;
-            emitter.emit(newValue);
-          }
-        }, interval);
-      },
-      stopCallback: (): void => {
-        window.clearInterval(intervalTO);
-      }
-    });
-    return emitter;
-  }
 
-  // TODO: test
-  // TODO: docs
-  fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
-    const emitter = new Emitter<T>();
-    const fn = (event: MessageEvent): void => {
-      emitter.emit(event.data as T);
-    };
-    emitter.setOptions({
-      startCallback: (): void => {
-        ws.addEventListener("message", fn);
-      },
-      stopCallback: (): void => {
-        ws.removeEventListener("message", fn);
-      }
-    });
-    return emitter;
-  }
+// TODO: test
+// TODO: docs
+export function fromObserver<T> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
+  const emitter = new Emitter<T>();
+  let lastValue: T;
+  let intervalTO: number;
+  emitter.setOptions({
+    startCallback: (): void => {
+      intervalTO = window.setInterval(async () => {
+        let newValue = observeFn();
+        if(newValue instanceof Promise) {
+          newValue = await newValue;
+        }
+        if(newValue !== lastValue) {
+          lastValue = newValue;
+          emitter.emit(newValue);
+        }
+      }, interval);
+    },
+    stopCallback: (): void => {
+      window.clearInterval(intervalTO);
+    }
+  });
+  return emitter;
+}
+
+
+// TODO: test
+// TODO: docs
+export function fromCookie (cookieName: string, interval: number = 500): Emitter<string> {
+  return fromObserver<string>((): string => {
+    const parts = `; ${document.cookie}`.split(`; ${cookieName}=`);
+    if(parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+    return null;
+  }, interval);
+}
+
+// TODO: test
+// TODO: docs
+export function fromSearchParam (paramName: string, interval: number = 500): Emitter<string> {
+  return fromObserver<string>((): string => {
+    const params = new URLSearchParams(window.location.search.slice(1));
+    return params.get(paramName);
+  }, interval);
+}
+
+
+// TODO: test
+// TODO: docs
+export function fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
+  const emitter = new Emitter<T>();
+  const fn = (event: MessageEvent): void => {
+    emitter.emit(event.data as T);
+  };
+  emitter.setOptions({
+    startCallback: (): void => {
+      ws.addEventListener("message", fn);
+    },
+    stopCallback: (): void => {
+      ws.removeEventListener("message", fn);
+    }
+  });
+  return emitter;
 }

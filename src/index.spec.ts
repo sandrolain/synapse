@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { Emitter, IntervalData } from "./index";
+import { Emitter, IntervalData, fromInterval, fromPromise, fromListener } from "./index";
 
 type TestData = Record<string, string>;
 interface FooData {
@@ -423,7 +423,7 @@ describe("Emitter module", () => {
   });
 
   it("Emitter fromInterval() with maxTimes", done => {
-    const subject = Emitter.fromInterval(0, 100, 5).start();
+    const subject = fromInterval(0, 100, 5).start();
 
     const passedData: IntervalData[] = [];
 
@@ -444,7 +444,7 @@ describe("Emitter module", () => {
   });
 
   it("Emitter fromInterval() unlimited", done => {
-    const subject = Emitter.fromInterval(0, 100).start();
+    const subject = fromInterval(0, 100).start();
 
     const passedData: IntervalData[] = [];
 
@@ -471,7 +471,7 @@ describe("Emitter module", () => {
     const prom = new Promise<FooData>((ok) => {
       setTimeout(() => ok({ foo: "bar" }), 200);
     });
-    const subject = Emitter.fromPromise(prom);
+    const subject = fromPromise(prom);
 
     subject.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
@@ -481,7 +481,7 @@ describe("Emitter module", () => {
 
   it("Emitter fromListener()", done => {
     const $a = document.createElement("a");
-    const subject = Emitter.fromListener("click", $a).start();
+    const subject = fromListener("click", $a).start();
 
     subject.subscribe(data => {
       expect(data).toBeInstanceOf(Event);
