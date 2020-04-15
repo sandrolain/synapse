@@ -561,3 +561,25 @@ export function fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
   });
   return emitter;
 }
+
+
+// TODO: test
+// TODO: docs
+export function fromFetchPolling (interval: number, input: RequestInfo, init?: RequestInit): Emitter<Response> {
+  const emitter = new Emitter<Response>();
+  const fn = (): void => {
+    emitter.emit(fetch(input, init));
+  };
+  let itv: number;
+
+  emitter.setOptions({
+    startCallback: (): void => {
+      fn();
+      itv = window.setInterval(fn, interval);
+    },
+    stopCallback: (): void => {
+      window.clearInterval(itv);
+    }
+  });
+  return emitter;
+}
