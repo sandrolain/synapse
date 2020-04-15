@@ -1,4 +1,4 @@
-![synapses](https://raw.githubusercontent.com/sandrolain/synapses/bca5cd9db541fa539bc2b920407254bd69c604e0/assets/logo.svg?sanitize=true "synapses")
+![synapses](https://raw.githubusercontent.com/sandrolain/synapses/bfd1dd3772c0aa7b8356da7404eeffac06c73174/assets/logo.svg?sanitize=true "synapses")
 
 <p align="center">TS/JS library for data propagation</p>
   
