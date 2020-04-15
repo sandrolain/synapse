@@ -1,8 +1,9 @@
-![synapse](https://raw.githubusercontent.com/sandrolain/synapse/bca5cd9db541fa539bc2b920407254bd69c604e0/assets/logo.svg?sanitize=true "synapse")
+![synapses](https://raw.githubusercontent.com/sandrolain/synapses/bca5cd9db541fa539bc2b920407254bd69c604e0/assets/logo.svg?sanitize=true "synapses")
 
 <p align="center">TS/JS library for data propagation</p>
+  
 
-Synapse provides a light communication system based on observables instances called **Emitter**, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to filter, manipulate and forward them to other instances observable or other subjects.
+Synapses provides a **light communication system** based on observables instances called *Emitter*, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to **filter, manipulate and forward** them to other instances observable or other subjects.
 
 Processing information creates a chain of observable nodes that you can subscribe to.
 
@@ -19,9 +20,9 @@ The library is also available of some methods for monitoring and obtaining infor
 
 ---
 
-# Getting Started
+## Getting Started
 
-*W.I.P.*
+Documentation with examples can be found [clicking here](https://sandrolain.github.io/synapses/typedocs/modules/_index_.html)
 
 ---
 
@@ -38,18 +39,18 @@ The build of this package generates two versions:
 
 <table><thead><tr><th>master</th><th>develop</th></tr></thead><tbody><tr><td>
 
-[![Build Status](https://travis-ci.org/sandrolain/synapse.svg?branch=master)](https://travis-ci.org/sandrolain/synapse)
+[![Build Status](https://travis-ci.org/sandrolain/synapses.svg?branch=master)](https://travis-ci.org/sandrolain/synapses)
 
 </td><td>
 
-[![Build Status](https://travis-ci.org/sandrolain/synapse.svg?branch=develop)](https://travis-ci.org/sandrolain/synapse)
+[![Build Status](https://travis-ci.org/sandrolain/synapses.svg?branch=develop)](https://travis-ci.org/sandrolain/synapses)
 
 </td></tr></tbody></table>
 
 ---
 
 ## License
-[![MIT](https://img.shields.io/github/license/sandrolain/synapse)](./LICENSE)
+[![MIT](https://img.shields.io/github/license/sandrolain/synapses)](./LICENSE)
 
 -------------------------
 
