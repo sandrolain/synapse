@@ -1,7 +1,8 @@
 ![synapses](https://raw.githubusercontent.com/sandrolain/synapses/bfd1dd3772c0aa7b8356da7404eeffac06c73174/assets/logo.svg?sanitize=true "synapses")
 
-<p align="center">TS/JS library for data propagation</p>
-  
+<p align="center">Light library for data propagation</p>
+
+---
 
 Synapses provides a **light communication system** based on observables instances called *Emitter*, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to **filter, manipulate and forward** them to other instances observable or other subjects.
 
