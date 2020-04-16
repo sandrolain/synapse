@@ -15,32 +15,44 @@ export interface IntervalData {
   maxTimes: number;
 }
 
-// TODO: docs
-export type IntervalCallback = (data: IntervalData) => void;
 
-// TODO: docs
+/**
+ * Interface for options accepted by Emitter constructor
+ */
 export interface EmitterOptions {
+  /** Enable the cache of emitted values. New subscribers receives the replay of previously emitted values */
   replay?: boolean;
+  /** Max number of emitted values to cache. After the limit is reached oldest value is dropped and newer is inserted */
   replayMax?: number;
+  /** A callback executed by the start() method */
   startCallback?: () => any;
+  /** A callback executed by the stop() method */
   stopCallback?: () => any;
 }
 
-// TODO: docs
+
 // TODO: test
+/**
+ * Class that represents the subscription of a *Subscriber* to an *Emitter*
+ */
 export class Subscription<T> {
   constructor (
     readonly emitter: Emitter<T>,
     readonly subscriber: Subscriber<T>
   ) {}
 
-  unsubcribe (): void {
+  /**
+   * Allows the cancellation of the subscription
+   */
+  unsubscribe (): void {
     return this.emitter.unsubscribe(this.subscriber);
   }
 }
 
 
-// TODO: docs
+/**
+ * Class of the Emitter
+ */
 export class Emitter<T=any> {
   private subscriptions: Set<Subscriber<T>> = new Set();
   private options: EmitterOptions = {
@@ -58,7 +70,10 @@ export class Emitter<T=any> {
     this.setOptions(options);
   }
 
-  // TODO: docs
+  /**
+   * Allows updating of the **Emitter** options
+   * @param options Object with the options to update
+   */
   setOptions (options: EmitterOptions = {}): void {
     Object.assign(this.options, options);
     this.updateReplayCache();
@@ -347,7 +362,9 @@ export class Emitter<T=any> {
     return emitter;
   }
 
-  // TODO: docs
+  /**
+   * Starts data output for Emitter generated from external data sources
+   */
   start (): Emitter<T> {
     if(this.options.startCallback) {
       this.options.startCallback();
@@ -355,7 +372,9 @@ export class Emitter<T=any> {
     return this;
   }
 
-  // TODO: docs
+  /**
+   * Stop data output for Emitter generated from external data sources
+   */
   stop (): Emitter<T> {
     if(this.options.stopCallback) {
       this.options.stopCallback();
@@ -364,8 +383,12 @@ export class Emitter<T=any> {
   }
 
   // TODO: test
-  // TODO: docs
-  thenDispatch (eventName: string, target: Window = window): Subscription<T> {
+  /**
+   * Subscribes to the dispatch of a CustomEvent DOM
+   * @param eventName The name of the DOM event to be dispatched
+   * @param target The *Window*, *Document* or *HTMLElement* instance towards which to dispatch the event. Default: current *window*
+   */
+  thenDispatch (eventName: string, target: Window | Document | HTMLElement = window): Subscription<T> {
     return this.subscribe((data: T) => {
       const event = new CustomEvent(eventName, {
         detail: data,
@@ -379,9 +402,10 @@ export class Emitter<T=any> {
 }
 
 
-
 /**
- * Generate an {@link Emitter} that emit a call when a new event is fired
+ * Generates an {@link Emitter} that emit a call when a new event is fired<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
  * @param eventType Name of the event
  * @param target Window, Document or Element node to attach the event listener
  */
@@ -401,8 +425,9 @@ export function fromListener (eventType: string, target: ListenerTarget = window
   return emitter;
 }
 
+
 /**
- * Generate an {@link Emitter} that emit a call when the promise resolves
+ * Generates an {@link Emitter} that emit a call when the promise resolves
  * @param promise The Promise that trigger
  */
 export function fromPromise<R = any> (promise: Promise<R>): Emitter<R | Error> {
@@ -411,9 +436,12 @@ export function fromPromise<R = any> (promise: Promise<R>): Emitter<R | Error> {
   return emitter;
 }
 
+
 /**
- * Generate an {@link Emitter} that emit a call to the attached subscribers with regular intervals.<br/>
- * The data propagated to the subscribers is an object {@link IntervalData} with info about the interval emission
+ * Generates an {@link Emitter} that emit a call to the attached subscribers with regular intervals.<br/>
+ * The data propagated to the subscribers is an object {@link IntervalData} with info about the interval emission<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
  * @param delay The time (ms) to wait before the first emission
  * @param interval The time (ms) of interval before emissions
  * @param maxTimes (optional) If passed a value > 0, limit the number of emissions to maximum the specified value
@@ -475,8 +503,14 @@ export function fromInterval (delay: number, interval: number, maxTimes: number 
   return emitter;
 }
 
+
 // TODO: test
-// TODO: docs
+/**
+ * Generates an {@link Emitter} that emit at the change in the value of an item in a Storage area<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param itemName The name of the item to be observed
+ */
 export function fromStorage (itemName: string): Emitter<string> {
   const emitter = new Emitter<string>();
   const eventCallback = (event: StorageEvent): void => {
@@ -496,8 +530,14 @@ export function fromStorage (itemName: string): Emitter<string> {
 
 
 // TODO: test
-// TODO: docs
-export function fromObserver<T> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
+/**
+ * Generates an {@link Emitter} that emit at the change in the value returned by a custom callback<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param observeFn The callback that return the value to observe
+ * @param interval The time in milliseconds for the observation interval. Default: 500 ms
+ */
+export function fromObserver<T=any> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
   const emitter = new Emitter<T>();
   let lastValue: T;
   let intervalTO: number;
@@ -523,7 +563,13 @@ export function fromObserver<T> (observeFn: () => T | Promise<T>, interval: numb
 
 
 // TODO: test
-// TODO: docs
+/**
+ * Generates an {@link Emitter} that emit at the change in the value of an cookie<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param cookieName The name of the cookie to observe
+ * @param interval The time in milliseconds for the observation interval. Default: 500 ms
+ */
 export function fromCookie (cookieName: string, interval: number = 500): Emitter<string> {
   return fromObserver<string>((): string => {
     const parts = `; ${document.cookie}`.split(`; ${cookieName}=`);
@@ -534,8 +580,13 @@ export function fromCookie (cookieName: string, interval: number = 500): Emitter
   }, interval);
 }
 
+
 // TODO: test
-// TODO: docs
+/**
+ * Generates an {@link Emitter} that emit at the change in the value of a search param into window location
+ * @param paramName The name of the parameter to be observed
+ * @param interval The time in milliseconds for the observation interval. Default: 500 ms
+ */
 export function fromSearchParam (paramName: string, interval: number = 500): Emitter<string> {
   return fromObserver<string>((): string => {
     const params = new URLSearchParams(window.location.search.slice(1));
@@ -545,7 +596,12 @@ export function fromSearchParam (paramName: string, interval: number = 500): Emi
 
 
 // TODO: test
-// TODO: docs
+/**
+ * Generates an {@link Emitter} that emit upon receiving a message from a WebSocket communication<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param ws The instance of *WebSocket* to notify the messages
+ */
 export function fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
   const emitter = new Emitter<T>();
   const fn = (event: MessageEvent): void => {
@@ -564,7 +620,14 @@ export function fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
 
 
 // TODO: test
-// TODO: docs
+/**
+ * Generates an {@link Emitter} which makes a fetch call at regular intervals and emit the received *Response*<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param interval The time in milliseconds of the polling interval for the fetch call
+ * @param input The url string or *Request* instance for the fetch call
+ * @param init The *RequestInit* parameters for the fetch call
+ */
 export function fromFetchPolling (interval: number, input: RequestInfo, init?: RequestInit): Emitter<Response> {
   const emitter = new Emitter<Response>();
   const fn = (): void => {
