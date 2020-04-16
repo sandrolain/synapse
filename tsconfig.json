@@ -26,7 +26,7 @@
   ],
   "typedocOptions": {
     "mode": "modules",
-    "out": "docs",
+    "out": "./docs/typedocs",
     "exclude": "./src/**/*.spec.ts"
   }
 }
