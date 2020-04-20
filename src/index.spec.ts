@@ -137,29 +137,17 @@ describe("Emitter module", () => {
     });
 
     subject.emitAll([
-      {
-        foo: "foo"
-      },
-      {
-        foo: "bar"
-      },
-      {
-        bar: "foo"
-      }
+      { foo: "foo" },
+      { foo: "bar" },
+      { bar: "foo" }
     ]);
 
     setTimeout(() => {
       expect(passedData.length).toEqual(3);
       expect(passedData).toMatchObject([
-        {
-          foo: "foo"
-        },
-        {
-          foo: "bar"
-        },
-        {
-          bar: "foo"
-        }
+        { foo: "foo" },
+        { foo: "bar" },
+        { bar: "foo" }
       ]);
       done();
     }, 1000);
@@ -177,15 +165,9 @@ describe("Emitter module", () => {
       });
 
     subject.emitAll([
-      {
-        foo: "foo"
-      },
-      {
-        foo: "bar"
-      },
-      {
-        bar: "foo"
-      }
+      { foo: "foo" },
+      { foo: "bar" },
+      { bar: "foo" }
     ]);
 
     setTimeout(() => {
@@ -207,18 +189,10 @@ describe("Emitter module", () => {
       });
 
     subject.emitAll([
-      {
-        value: 4
-      },
-      {
-        value: 8
-      },
-      {
-        value: 15
-      },
-      {
-        value: 16
-      }
+      { value: 4 },
+      { value: 8 },
+      { value: 15 },
+      { value: 16 }
     ]);
 
     setTimeout(() => {
@@ -242,18 +216,10 @@ describe("Emitter module", () => {
       });
 
     subject.emitAll([
-      {
-        value: 4
-      },
-      {
-        value: 8
-      },
-      {
-        value: 15
-      },
-      {
-        value: 16
-      }
+      { value: 4 },
+      { value: 8 },
+      { value: 15 },
+      { value: 16 }
     ]);
 
     setTimeout(() => {
@@ -283,7 +249,7 @@ describe("Emitter module", () => {
     }, 500);
   });
 
-  it("buffer()", done => {
+  it("buffer() with Emitter releaser", done => {
     const subject = new Emitter();
     const releaser = new Emitter();
 
@@ -294,6 +260,66 @@ describe("Emitter module", () => {
     });
 
     subject.emit(4);
+    subject.emit(8);
+    subject.emit(15);
+    subject.emit(16);
+
+    expect(latestData).toBeNull();
+
+    releaser.emit();
+
+    expect(latestData).toMatchObject([4, 8, 15, 16]);
+    done();
+  });
+
+  it("buffer() with function releaser", done => {
+    const subject = new Emitter<number>();
+    const releaser = (buffer: number[]): boolean => (buffer.length === 4);
+
+    subject.buffer(releaser).subscribe(data => {
+      expect(data).toMatchObject([4, 8, 15, 16]);
+      done();
+    });
+
+    subject.emit(4);
+    subject.emit(8);
+    subject.emit(15);
+    subject.emit(16);
+  });
+
+  it("debounce()", done => {
+    const subject = new Emitter();
+    const releaser = new Emitter();
+
+    let latestData: number = null;
+
+    subject.debounce(releaser).subscribe(data => {
+      latestData = data;
+    });
+
+    subject.emit(4);
+    subject.emit(8);
+    subject.emit(15);
+    subject.emit(16);
+
+    expect(latestData).toBeNull();
+
+    releaser.emit();
+
+    expect(latestData).toEqual(16);
+    done();
+  });
+
+  it("debounceTime()", done => {
+    const subject = new Emitter();
+
+    let latestData: number = null;
+
+    subject.debounceTime(1000).subscribe(data => {
+      latestData = data;
+    });
+
+    subject.emit(4);
     setTimeout(() => {
       subject.emit(8);
     }, 100);
@@ -305,89 +331,20 @@ describe("Emitter module", () => {
     }, 300);
 
     setTimeout(() => {
-      releaser.emit();
-    }, 1000);
-
-    setTimeout(() => {
       expect(latestData).toBeNull();
 
       setTimeout(() => {
-        expect(latestData).toMatchObject([4, 8, 15, 16]);
+        expect(latestData).toEqual(16);
         done();
       }, 1000);
     }, 500);
   });
 
   it("audit()", done => {
-    const subject = new Emitter();
-    const releaser = new Emitter();
-
-    let latestData: number = null;
-
-    subject.audit(releaser).subscribe(data => {
-      latestData = data;
-    });
-
-    subject.emit(4);
-    setTimeout(() => {
-      subject.emit(8);
-    }, 100);
-    setTimeout(() => {
-      subject.emit(15);
-    }, 200);
-    setTimeout(() => {
-      subject.emit(16);
-    }, 300);
-
-    setTimeout(() => {
-      releaser.emit();
-    }, 1000);
-
-    setTimeout(() => {
-      expect(latestData).toBeNull();
-
-      setTimeout(() => {
-        expect(latestData).toEqual(16);
-        done();
-      }, 1000);
-    }, 500);
-  });
-
-  it("auditTime()", done => {
-    const subject = new Emitter();
-
-    let latestData: number = null;
-
-    subject.auditTime(1000).subscribe(data => {
-      latestData = data;
-    });
-
-    subject.emit(4);
-    setTimeout(() => {
-      subject.emit(8);
-    }, 100);
-    setTimeout(() => {
-      subject.emit(15);
-    }, 200);
-    setTimeout(() => {
-      subject.emit(16);
-    }, 300);
-
-    setTimeout(() => {
-      expect(latestData).toBeNull();
-
-      setTimeout(() => {
-        expect(latestData).toEqual(16);
-        done();
-      }, 1000);
-    }, 500);
-  });
-
-  it("debounce()", done => {
     const subjectA = new Emitter();
     const releaser = new Emitter();
 
-    subjectA.debounce(releaser).subscribe(data => {
+    subjectA.audit(releaser).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
@@ -403,10 +360,10 @@ describe("Emitter module", () => {
     });
   });
 
-  it("debounceTime()", done => {
+  it("auditTime()", done => {
     const subjectA = new Emitter();
 
-    subjectA.debounceTime(200).subscribe(data => {
+    subjectA.auditTime(200).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
