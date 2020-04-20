@@ -2,6 +2,7 @@ export type Subscriber<T> = ((data: T) => void) | Emitter<T>;
 export type ReduceFunction<A=any, B=any> = (accumulatorData: B, itemData: A) => B;
 export type FilterFunction<T=any> = (data: T) => boolean;
 export type MappingFunction<A=any, B=any> = (data: A) => B;
+export type BufferReleaseFunction<T=any> = (buffer: T[]) => boolean;
 export type ListenerTarget = Window | Document | Element;
 
 export interface IntervalData {
@@ -194,13 +195,11 @@ export class Emitter<T=any> {
    */
   filter (filterFn: FilterFunction<T>): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
-
     this.subscribe((data: T) => {
       if(filterFn(data)) {
         emitter.emit(data);
       }
     });
-
     return emitter;
   }
 
@@ -210,12 +209,10 @@ export class Emitter<T=any> {
    */
   map<R=any> (mapFn: MappingFunction<T, R>): Emitter<R> {
     const emitter = this.getChildEmitter<R>();
-
     this.subscribe((data: T): void => {
       const newData = mapFn(data) as R;
       emitter.emit(newData);
     });
-
     return emitter;
   }
 
@@ -229,13 +226,11 @@ export class Emitter<T=any> {
     accumulatorData: any
   ): Emitter<R> {
     const emitter = this.getChildEmitter<R>();
-
     this.subscribe((data: any) => {
       const newData = reduceFn(accumulatorData, data) as R;
       accumulatorData = newData;
       emitter.emit(newData);
     });
-
     return emitter;
   }
 
@@ -245,11 +240,9 @@ export class Emitter<T=any> {
    */
   delay (delay: number): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
-
     this.subscribe((data: any) => {
       window.setTimeout(() => emitter.emit(data), delay);
     });
-
     return emitter;
   }
 
@@ -257,21 +250,18 @@ export class Emitter<T=any> {
    * Generate a new {@link Emitter} that receive data one time after the *releaseEmitter* has released the propagation
    * @param releaseEmitter {@link Emitter} that permit the propagation
    */
-  debounce (releaseEmitter: Emitter): Emitter<T> {
+  audit (releaseEmitter: Emitter): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
     let ok: boolean = false;
-
     this.subscribe((data: any) => {
       if(ok) {
         emitter.emit(data);
         ok = false;
       }
     });
-
     releaseEmitter.subscribe(() => {
       ok = true;
     });
-
     return emitter;
   }
 
@@ -279,23 +269,19 @@ export class Emitter<T=any> {
    * Generate a new {@link Emitter} that receive data one time after a predefined time
    * @param time Time (ms) to wait before next propagation
    */
-  debounceTime (time: number): Emitter<T> {
+  auditTime (time: number): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
     let ok: boolean = false;
     let emitterTO: any;
-
     this.subscribe((data: any) => {
       if(ok) {
         emitter.emit(data);
         ok = false;
       }
-
       window.clearTimeout(emitterTO);
       emitterTO = window.setTimeout(() => (ok = true), time);
     });
-
     emitterTO = window.setTimeout(() => (ok = true), time);
-
     return emitter;
   }
 
@@ -303,7 +289,7 @@ export class Emitter<T=any> {
    * Generate a new {@link Emitter} that receive latest data collected when a *releaseEmitter* has released the propagation
    * @param releaseEmitter {@link Emitter} that permit the propagation
    */
-  audit (releaseEmitter: Emitter): Emitter<T> {
+  debounce (releaseEmitter: Emitter): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
     let lastData: any = null;
 
@@ -322,19 +308,17 @@ export class Emitter<T=any> {
    * Generate a new {@link Emitter} that receive latest data collected if a predefine time is elapsed without new propagation
    * @param time Time (ms) to wait for the data propagation
    */
-  auditTime (time: number): Emitter<T> {
+  debounceTime (time: number): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
     let lastData: any = undefined;
     let emitterTO: any;
-
     this.subscribe((data: any) => {
       lastData = data;
-
       window.clearTimeout(emitterTO);
-
       emitterTO = window.setTimeout(() => {
         if(lastData !== undefined) {
           emitter.emit(lastData);
+          lastData = undefined;
         }
       }, time);
     });
@@ -344,22 +328,28 @@ export class Emitter<T=any> {
 
   /**
    * Generate a new {@link Emitter} that receive an array of buffered data after the *releaseEmitter* has released the propagation
-   * @param releaseEmitter {@link Emitter} that permit the propagation
+   * @param releaseEmitter {@link Emitter} that permit the propagation, or releaser function called after every buffer population that release the buffer if returns true
    */
-  buffer (releaseEmitter: Emitter): Emitter<T[]> {
+  buffer (releaser: Emitter | BufferReleaseFunction<T>): Emitter<T[]> {
     const emitter = this.getChildEmitter<T[]>();
+    const releaserFunction = (typeof releaser === "function") ? releaser : null;
     let bufferData: T[] = [];
-
-    this.subscribe((data: any) => {
-      bufferData.push(data);
-    });
-
-    releaseEmitter.subscribe(() => {
+    const releaseAndReset = (): void => {
       const outBuffer = bufferData;
       bufferData = [];
       emitter.emit(outBuffer);
+    };
+    this.subscribe((data: any) => {
+      bufferData.push(data);
+      if(releaserFunction && true === releaserFunction(bufferData.slice())) {
+        releaseAndReset();
+      }
     });
-
+    if(releaser instanceof Emitter) {
+      releaser.subscribe(() => {
+        releaseAndReset();
+      });
+    }
     return emitter;
   }
 
