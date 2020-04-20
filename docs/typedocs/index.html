@@ -81,8 +81,44 @@
 					<li>Custom value watchers</li>
 				</ul>
 				<hr>
-				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
-					<h2>Getting Started</h2>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<a href="#as-typescript-module" id="as-typescript-module" style="color: inherit; text-decoration: none;">
+					<h3>As TypeScript module</h3>
+				</a>
+				<pre><code class="language-typescript"><span class="hljs-comment">/// import specific methods or classes</span>
+<span class="hljs-keyword">import</span> { Emitter, fromListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"synapses"</span>;
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-comment">// or entire library</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> synapses <span class="hljs-keyword">from</span> <span class="hljs-string">"synapses"</span>;
+<span class="hljs-comment">// ...</span></code></pre>
+				<a href="#as-browser-ecmascript-module" id="as-browser-ecmascript-module" style="color: inherit; text-decoration: none;">
+					<h3>As browser EcmaScript module</h3>
+				</a>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"module"</span>&gt;</span><span class="javascript">
+<span class="hljs-comment">/// import specific methods or classes</span>
+<span class="hljs-keyword">import</span> { Emitter, fromListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./synapses/esm/index.js"</span>;
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-comment">// or entire library</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> synapses <span class="hljs-keyword">from</span> <span class="hljs-string">"./synapses/esm/index.js"</span>;
+<span class="hljs-comment">// ...</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<a href="#as-commonjsnodejs-module" id="as-commonjsnodejs-module" style="color: inherit; text-decoration: none;">
+					<h3>As commonjs/node.js module</h3>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">/// import specific methods or classes</span>
+<span class="hljs-keyword">const</span> { Emitter, fromListener } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"synapses"</span>);
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-comment">// or entire library</span>
+<span class="hljs-keyword">const</span> synapses = <span class="hljs-built_in">require</span>(<span class="hljs-string">"synapses"</span>);
+<span class="hljs-comment">// ...</span></code></pre>
+				<hr>
+				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+					<h2>Documentation</h2>
 				</a>
 				<p>Documentation with examples can be found <a href="https://sandrolain.github.io/synapses/typedocs/modules/_index_.html">clicking here</a></p>
 				<hr>

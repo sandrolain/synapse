@@ -158,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L65">index.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L66">index.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -185,7 +185,7 @@
 					<div class="tsd-signature tsd-kind-icon">replay<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L65">index.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L66">index.ts:66</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -195,7 +195,7 @@
 					<div class="tsd-signature tsd-kind-icon">subscriptions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_index_.html#subscriber" class="tsd-signature-type">Subscriber</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new Set()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L58">index.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L59">index.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -212,12 +212,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L306">index.ts:306</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L253">index.ts:253</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected when a <em>releaseEmitter</em> has released the propagation</p>
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after the <em>releaseEmitter</em> has released the propagation</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -243,12 +243,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L325">index.ts:325</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L272">index.ts:272</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected if a predefine time is elapsed without new propagation</p>
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after a predefined time</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -256,7 +256,7 @@
 								<li>
 									<h5>time: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Time (ms) to wait for the data propagation</p>
+										<p>Time (ms) to wait before next propagation</p>
 									</div>
 								</li>
 							</ul>
@@ -268,13 +268,13 @@
 					<a name="buffer" class="tsd-anchor"></a>
 					<h3>buffer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">(</span>releaseEmitter<span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">(</span>releaser<span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol"> | </span><a href="../modules/_index_.html#bufferreleasefunction" class="tsd-signature-type">BufferReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L349">index.ts:349</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L333">index.ts:333</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -285,10 +285,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>releaseEmitter: <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p><a href="_index_.emitter.html">Emitter</a> that permit the propagation</p>
-									</div>
+									<h5>releaser: <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol"> | </span><a href="../modules/_index_.html#bufferreleasefunction" class="tsd-signature-type">BufferReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -305,12 +302,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L260">index.ts:260</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L292">index.ts:292</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after the <em>releaseEmitter</em> has released the propagation</p>
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected when a <em>releaseEmitter</em> has released the propagation</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -336,12 +333,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L282">index.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L311">index.ts:311</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after a predefined time</p>
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected if a predefine time is elapsed without new propagation</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -349,7 +346,7 @@
 								<li>
 									<h5>time: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Time (ms) to wait before next propagation</p>
+										<p>Time (ms) to wait for the data propagation</p>
 									</div>
 								</li>
 							</ul>
@@ -367,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L246">index.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L241">index.ts:241</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -398,7 +395,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L159">index.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L160">index.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -429,7 +426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L185">index.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L186">index.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -460,7 +457,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L195">index.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L196">index.ts:196</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -491,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L90">index.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L91">index.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -514,7 +511,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L211">index.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L210">index.ts:210</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -551,7 +548,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L145">index.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L146">index.ts:146</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -573,7 +570,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L173">index.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L174">index.ts:174</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -599,7 +596,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L227">index.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L224">index.ts:224</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -642,7 +639,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L78">index.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L79">index.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -673,7 +670,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L369">index.ts:369</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L359">index.ts:359</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -695,7 +692,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L379">index.ts:379</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L369">index.ts:369</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -717,7 +714,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L101">index.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L102">index.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -748,7 +745,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L135">index.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L136">index.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -779,7 +776,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L127">index.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L128">index.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -810,7 +807,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L392">index.ts:392</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L382">index.ts:382</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -847,7 +844,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L119">index.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L120">index.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -875,7 +872,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L84">index.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L85">index.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -891,7 +888,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L59">index.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L60">index.ts:60</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -900,7 +897,7 @@
 						<div class="tsd-signature tsd-kind-icon">replay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L60">index.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L61">index.ts:61</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -910,7 +907,7 @@
 						<div class="tsd-signature tsd-kind-icon">replay<wbr>Max<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L61">index.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L62">index.ts:62</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -920,7 +917,7 @@
 						<div class="tsd-signature tsd-kind-icon">start<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L62">index.ts:62</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L63">index.ts:63</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -930,7 +927,7 @@
 						<div class="tsd-signature tsd-kind-icon">stop<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/466abd1/src/index.ts#L63">index.ts:63</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/9e5f4a7/src/index.ts#L64">index.ts:64</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1048,6 +1045,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_index_.intervaldata.html" class="tsd-kind-icon">Interval<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../modules/_index_.html#bufferreleasefunction" class="tsd-kind-icon">Buffer<wbr>Release<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../modules/_index_.html#filterfunction" class="tsd-kind-icon">Filter<wbr>Function</a>
