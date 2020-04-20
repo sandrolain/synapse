@@ -21,7 +21,49 @@ The library is also available of some methods for monitoring and obtaining infor
 
 ---
 
-## Getting Started
+## Usage
+
+### As TypeScript module
+
+```typescript
+/// import specific methods or classes
+import { Emitter, fromListener } from "synapses";
+// ...
+
+// or entire library
+import * as synapses from "synapses";
+// ...
+```
+
+### As browser EcmaScript module
+
+```html
+<script type="module">
+/// import specific methods or classes
+import { Emitter, fromListener } from "./synapses/esm/index.js";
+// ...
+
+// or entire library
+import * as synapses from "./synapses/esm/index.js";
+// ...
+</script>
+```
+
+### As commonjs/node.js module
+
+```javascript
+/// import specific methods or classes
+const { Emitter, fromListener } = require("synapses");
+// ...
+
+// or entire library
+const synapses = require("synapses");
+// ...
+```
+
+---
+
+## Documentation
 
 Documentation with examples can be found [clicking here](https://sandrolain.github.io/synapses/typedocs/modules/_index_.html)
 
