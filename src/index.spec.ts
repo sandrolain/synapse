@@ -34,6 +34,26 @@ describe("Emitter module", () => {
     done();
   });
 
+  it("Subscription.unsubscribe", done => {
+    const subject = new Emitter<FooData>();
+
+    const subscriberCallback = (data: any): void => { data; };
+    const subscriberEmitter  = new Emitter<FooData>();
+
+    const subscriptionCallback = subject.subscribe(subscriberCallback);
+    const subscriptionEmitter  = subject.subscribe(subscriberEmitter);
+
+    expect(subject.subscribed(subscriberCallback)).toBeTruthy();
+    expect(subject.subscribed(subscriberEmitter)).toBeTruthy();
+
+    subscriptionCallback.unsubscribe();
+    subscriptionEmitter.unsubscribe();
+
+    expect(subject.subscribed(subscriberCallback)).toBeFalsy();
+    expect(subject.subscribed(subscriberEmitter)).toBeFalsy();
+    done();
+  });
+
   it("Emitter cannot subscribe() itself", done => {
     const subject = new Emitter<FooData>();
     try {
@@ -151,6 +171,34 @@ describe("Emitter module", () => {
       ]);
       done();
     }, 1000);
+  });
+
+  it("Emitter reply cache", done => {
+    const subject = new Emitter<TestData>({
+      replay: true,
+      replayMax: 2
+    });
+
+    const prom = subject.emitAll([
+      { foo: "foo" },
+      { foo: "bar" },
+      { bar: "foo" }
+    ]);
+
+    prom.then(() => {
+      const passedData: TestData[] = [];
+
+      subject.subscribe(data => {
+        passedData.push(data);
+      });
+
+      expect(passedData.length).toEqual(2);
+      expect(passedData).toMatchObject([
+        { foo: "bar" },
+        { bar: "foo" }
+      ]);
+      done();
+    });
   });
 
   it("filter()", done => {
