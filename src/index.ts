@@ -33,7 +33,6 @@ export interface EmitterOptions {
 }
 
 
-// TODO: test
 /**
  * Class that represents the subscription of a *Subscriber* to an *Emitter*
  */
@@ -81,13 +80,18 @@ export class Emitter<T=any> {
     this.updateReplayCache();
   }
 
-  // TODO: test
+  /**
+   * @ignore
+   */
   private updateReplayCache (): void {
     if(this.options.replayMax > 0) {
       this.replayCache = this.replayCache.slice(-this.options.replayMax);
     }
   }
 
+  /**
+   * @ignore
+   */
   private getChildEmitter<R> (): Emitter<R> {
     return new Emitter({
       replay: this.options.replay,
@@ -161,7 +165,6 @@ export class Emitter<T=any> {
     if(data instanceof Promise) {
       data = await data;
     }
-    // TODO: test
     if(this.options.replay) {
       this.replayCache.push(data);
       this.updateReplayCache();
@@ -390,6 +393,35 @@ export class Emitter<T=any> {
       target.dispatchEvent(event);
     });
   }
+}
+
+// TODO: docs
+// TODO: test
+export function merge<T=any> (...args: Emitter[]): Emitter<T> {
+  const emitter = new Emitter<T>();
+  const subscriptions: Subscription<T>[] = [];
+
+  for(const source of args) {
+    subscriptions.push(source.subscribe(emitter));
+  }
+
+  emitter.setOptions({
+    startCallback: (): void => {
+      for(const source of args) {
+        if(!source.subscribed(emitter)) {
+          subscriptions.push(source.subscribe(emitter));
+        }
+      }
+    },
+    stopCallback: (): void => {
+      while(subscriptions.length > 0) {
+        const subs = subscriptions.shift();
+        subs.unsubscribe();
+      }
+    }
+  });
+
+  return emitter;
 }
 
 
