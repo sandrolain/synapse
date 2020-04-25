@@ -376,7 +376,6 @@ export class Emitter<T=any> {
     return this;
   }
 
-  // TODO: test
   /**
    * Subscribes to the dispatch of a CustomEvent DOM
    * @param eventName The name of the DOM event to be dispatched
@@ -396,14 +395,9 @@ export class Emitter<T=any> {
 }
 
 // TODO: docs
-// TODO: test
 export function merge<T=any> (...args: Emitter[]): Emitter<T> {
   const emitter = new Emitter<T>();
   const subscriptions: Subscription<T>[] = [];
-
-  for(const source of args) {
-    subscriptions.push(source.subscribe(emitter));
-  }
 
   emitter.setOptions({
     startCallback: (): void => {
@@ -527,32 +521,6 @@ export function fromInterval (delay: number, interval: number, maxTimes: number 
 }
 
 
-// TODO: test
-/**
- * Generates an {@link Emitter} that emit at the change in the value of an item in a Storage area<br/><br/>
- * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
- * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
- * @param itemName The name of the item to be observed
- */
-export function fromStorage (itemName: string): Emitter<string> {
-  const emitter = new Emitter<string>();
-  const eventCallback = (event: StorageEvent): void => {
-    const value = event.storageArea.getItem(itemName);
-    emitter.emit(value);
-  };
-  emitter.setOptions({
-    startCallback: (): void => {
-      window.addEventListener("storage", eventCallback);
-    },
-    stopCallback: (): void => {
-      window.removeEventListener("storage", eventCallback);
-    }
-  });
-  return emitter;
-}
-
-
-// TODO: test
 /**
  * Generates an {@link Emitter} that emit at the change in the value returned by a custom callback<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
@@ -562,7 +530,7 @@ export function fromStorage (itemName: string): Emitter<string> {
  */
 export function fromObserver<T=any> (observeFn: () => T | Promise<T>, interval: number = 500): Emitter<T> {
   const emitter = new Emitter<T>();
-  let lastValue: T;
+  let lastValue: T = null;
   let intervalTO: number;
   emitter.setOptions({
     startCallback: (): void => {
@@ -587,6 +555,21 @@ export function fromObserver<T=any> (observeFn: () => T | Promise<T>, interval: 
 
 // TODO: test
 /**
+ * Generates an {@link Emitter} that emit at the change in the value of an item in a Storage area<br/><br/>
+ * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
+ * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
+ * @param itemName The name of the item to be observed
+ * @param storageArea The LocalStorage or SessionStorage object
+ * @param interval The time in milliseconds for the observation interval. Default: 500 ms
+ */
+export function fromStorage (itemName: string, storageArea: Storage = window.localStorage, interval: number = 500): Emitter<string> {
+  return fromObserver<string>((): string => {
+    return storageArea.getItem(itemName);
+  }, interval);
+}
+
+
+/**
  * Generates an {@link Emitter} that emit at the change in the value of an cookie<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
  * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
@@ -604,7 +587,6 @@ export function fromCookie (cookieName: string, interval: number = 500): Emitter
 }
 
 
-// TODO: test
 /**
  * Generates an {@link Emitter} that emit at the change in the value of a search param into window location<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
@@ -620,14 +602,13 @@ export function fromSearchParam (paramName: string, interval: number = 500): Emi
 }
 
 
-// TODO: test
 /**
  * Generates an {@link Emitter} that emit upon receiving a message from a WebSocket communication<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
  * To stop listening it is necessary to execute the **stop()** method of the obtained Emitter instance
  * @param ws The instance of *WebSocket* to notify the messages
  */
-export function fromWebSocker<T=any> (ws: WebSocket): Emitter<T> {
+export function fromWebSocket<T=any> (ws: WebSocket): Emitter<T> {
   const emitter = new Emitter<T>();
   const fn = (event: MessageEvent): void => {
     emitter.emit(event.data as T);
