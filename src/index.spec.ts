@@ -2,7 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { Emitter, IntervalData, fromInterval, fromPromise, fromListener } from "./index";
+import WS from "jest-websocket-mock";
+import { Emitter, IntervalData, fromInterval, fromPromise, fromListener, merge, fromStorage, fromObserver, fromCookie, fromSearchParam, fromWebSocket, fromFetchPolling } from "./index";
 
 type TestData = Record<string, string>;
 interface FooData {
@@ -12,10 +13,10 @@ interface NumberData {
   value: number;
 }
 
-describe("Emitter module", () => {
+describe("Emitter instance", () => {
 
   it("check if callback is subscribed", done => {
-    const subject = new Emitter<FooData>();
+    const emitter = new Emitter<FooData>();
 
     const subscriber = (data: any): void => {
       data;
@@ -24,50 +25,52 @@ describe("Emitter module", () => {
       data;
     };
 
-    subject.subscribe(subscriber);
+    emitter.subscribe(subscriber);
 
-    const subscribed = subject.subscribed(subscriber);
-    const notSubscribed = subject.subscribed(notSubscriber);
+    const subscribed = emitter.subscribed(subscriber);
+    const notSubscribed = emitter.subscribed(notSubscriber);
 
     expect(subscribed).toBeTruthy();
     expect(notSubscribed).toBeFalsy();
     done();
   });
 
-  it("Subscription.unsubscribe", done => {
-    const subject = new Emitter<FooData>();
+  it("subscription.unsubscribe()", done => {
+    const emitter = new Emitter<FooData>();
 
-    const subscriberCallback = (data: any): void => { data; };
+    const subscriberCallback = (data: any): void => {
+      data;
+    };
     const subscriberEmitter  = new Emitter<FooData>();
 
-    const subscriptionCallback = subject.subscribe(subscriberCallback);
-    const subscriptionEmitter  = subject.subscribe(subscriberEmitter);
+    const subscriptionCallback = emitter.subscribe(subscriberCallback);
+    const subscriptionEmitter  = emitter.subscribe(subscriberEmitter);
 
-    expect(subject.subscribed(subscriberCallback)).toBeTruthy();
-    expect(subject.subscribed(subscriberEmitter)).toBeTruthy();
+    expect(emitter.subscribed(subscriberCallback)).toBeTruthy();
+    expect(emitter.subscribed(subscriberEmitter)).toBeTruthy();
 
     subscriptionCallback.unsubscribe();
     subscriptionEmitter.unsubscribe();
 
-    expect(subject.subscribed(subscriberCallback)).toBeFalsy();
-    expect(subject.subscribed(subscriberEmitter)).toBeFalsy();
+    expect(emitter.subscribed(subscriberCallback)).toBeFalsy();
+    expect(emitter.subscribed(subscriberEmitter)).toBeFalsy();
     done();
   });
 
-  it("Emitter cannot subscribe() itself", done => {
-    const subject = new Emitter<FooData>();
+  it("Cannot emitter.subscribe() itself", done => {
+    const emitter = new Emitter<FooData>();
     try {
-      subject.subscribe(subject);
+      emitter.subscribe(emitter);
     } catch(e) {
       return done();
     }
     done.fail(new Error("Emitter should not subscribe to itself"));
   });
 
-  it("Emitter cannot subscribeTO() to itself", done => {
-    const subject = new Emitter<FooData>();
+  it("Cannot emitter.subscribeTo() to itself", done => {
+    const emitter = new Emitter<FooData>();
     try {
-      subject.subscribeTo(subject);
+      emitter.subscribeTo(emitter);
     } catch(e) {
       return done();
     }
@@ -75,94 +78,94 @@ describe("Emitter module", () => {
   });
 
   it("emit with callback", done => {
-    const subject = new Emitter<FooData>();
+    const emitter = new Emitter<FooData>();
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subject.emit({
+    emitter.emit({
       foo: "bar"
     });
   });
 
-  it("emit Promise with callback", done => {
-    const subject = new Emitter<FooData>();
+  it("Promise resolution before emission", done => {
+    const emitter = new Emitter<FooData>();
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subject.emit(Promise.resolve({
+    emitter.emit(Promise.resolve({
       foo: "bar"
     }));
   });
 
-  it("chain emit with subscribe() into an Emitter", done => {
-    const subjectA = new Emitter<FooData>();
-    const subjectB = new Emitter<FooData>();
+  it("chain emit with emitter.subscribe() into an Emitter", done => {
+    const emitterA = new Emitter<FooData>();
+    const emitterB = new Emitter<FooData>();
 
-    subjectB.subscribe(data => {
+    emitterB.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subjectA.subscribe(subjectB);
+    emitterA.subscribe(emitterB);
 
-    subjectA.emit({
+    emitterA.emit({
       foo: "bar"
     });
   });
 
-  it("chain emit with subscribeTo() an Emitter", done => {
-    const subjectA = new Emitter<FooData>();
-    const subjectB = new Emitter<FooData>();
+  it("chain emit with emitter.subscribeTo() an Emitter", done => {
+    const emitterA = new Emitter<FooData>();
+    const emitterB = new Emitter<FooData>();
 
-    subjectB.subscribe(data => {
+    emitterB.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subjectB.subscribeTo(subjectA);
+    emitterB.subscribeTo(emitterA);
 
-    subjectA.emit({
+    emitterA.emit({
       foo: "bar"
     });
   });
 
-  it("emit with promise", done => {
-    const subject = new Emitter<FooData>();
+  it("Emitter to promise", done => {
+    const emitter = new Emitter<FooData>();
 
-    const prom = subject.promise();
+    const prom = emitter.promise();
 
     prom.then(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subject.emit({
+    emitter.emit({
       foo: "bar"
     });
   });
 
-  it("emitAll() with callback", done => {
-    const subject = new Emitter<TestData>();
+  it("emitter.emitAll() with callback", done => {
+    const emitter = new Emitter<TestData>();
 
     const passedData: TestData[] = [];
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       passedData.push(data);
     });
 
-    subject.emitAll([
+    const prom = emitter.emitAll([
       { foo: "foo" },
       { foo: "bar" },
       { bar: "foo" }
     ]);
 
-    setTimeout(() => {
+    prom.then(() => {
       expect(passedData.length).toEqual(3);
       expect(passedData).toMatchObject([
         { foo: "foo" },
@@ -170,16 +173,16 @@ describe("Emitter module", () => {
         { bar: "foo" }
       ]);
       done();
-    }, 1000);
+    });
   });
 
   it("Emitter reply cache", done => {
-    const subject = new Emitter<TestData>({
+    const emitter = new Emitter<TestData>({
       replay: true,
       replayMax: 2
     });
 
-    const prom = subject.emitAll([
+    const prom = emitter.emitAll([
       { foo: "foo" },
       { foo: "bar" },
       { bar: "foo" }
@@ -188,7 +191,7 @@ describe("Emitter module", () => {
     prom.then(() => {
       const passedData: TestData[] = [];
 
-      subject.subscribe(data => {
+      emitter.subscribe(data => {
         passedData.push(data);
       });
 
@@ -201,61 +204,61 @@ describe("Emitter module", () => {
     });
   });
 
-  it("filter()", done => {
-    const subject = new Emitter<TestData>();
+  it("emitter.filter()", done => {
+    const emitter = new Emitter<TestData>();
 
     const passedData: TestData[] = [];
 
-    subject
+    emitter
       .filter(data => data.foo === "bar")
       .subscribe(data => {
         passedData.push(data);
       });
 
-    subject.emitAll([
+    const prom = emitter.emitAll([
       { foo: "foo" },
       { foo: "bar" },
       { bar: "foo" }
     ]);
 
-    setTimeout(() => {
+    prom.then(() => {
       expect(passedData.length).toEqual(1);
       expect(passedData[0]).toMatchObject({ foo: "bar" });
       done();
-    }, 1000);
+    });
   });
 
-  it("map()", done => {
-    const subject = new Emitter();
+  it("emitter.map()", done => {
+    const emitter = new Emitter();
 
     const passedData: TestData[] = [];
 
-    subject
+    emitter
       .map(data => data.value)
       .subscribe(data => {
         passedData.push(data);
       });
 
-    subject.emitAll([
+    const prom = emitter.emitAll([
       { value: 4 },
       { value: 8 },
       { value: 15 },
       { value: 16 }
     ]);
 
-    setTimeout(() => {
+    prom.then(() => {
       expect(passedData.length).toEqual(4);
       expect(passedData).toMatchObject([4, 8, 15, 16]);
       done();
-    }, 1000);
+    });
   });
 
-  it("reduce()", done => {
-    const subject = new Emitter<NumberData>();
+  it("emitter.reduce()", done => {
+    const emitter = new Emitter<NumberData>();
 
     let latestData: number;
 
-    subject
+    emitter
       .reduce<number>((accum, data) => {
         return accum + data.value;
       }, 0)
@@ -263,54 +266,54 @@ describe("Emitter module", () => {
         latestData = data;
       });
 
-    subject.emitAll([
+    const prom = emitter.emitAll([
       { value: 4 },
       { value: 8 },
       { value: 15 },
       { value: 16 }
     ]);
 
-    setTimeout(() => {
+    prom.then(() => {
       expect(latestData).toEqual(43);
       done();
-    }, 1000);
+    });
   });
 
-  it("delay()", done => {
-    const subject = new Emitter();
+  it("emitter.delay()", done => {
+    const emitter = new Emitter();
 
     let latestData: number = 0;
 
-    subject.delay(1000).subscribe(data => {
+    emitter.delay(1000).subscribe(data => {
       latestData = data;
     });
 
-    subject.emit(42);
+    const prom = emitter.emit(42);
 
-    setTimeout(() => {
+    prom.then(() => {
       expect(latestData).toEqual(0);
 
       setTimeout(() => {
         expect(latestData).toEqual(42);
         done();
-      }, 1000);
-    }, 500);
+      }, 1100);
+    });
   });
 
-  it("buffer() with Emitter releaser", done => {
-    const subject = new Emitter();
+  it("emitter.buffer() with Emitter releaser", done => {
+    const emitter = new Emitter();
     const releaser = new Emitter();
 
     let latestData: number[] = null;
 
-    subject.buffer(releaser).subscribe(data => {
+    emitter.buffer(releaser).subscribe(data => {
       latestData = data;
     });
 
-    subject.emit(4);
-    subject.emit(8);
-    subject.emit(15);
-    subject.emit(16);
+    emitter.emit(4);
+    emitter.emit(8);
+    emitter.emit(15);
+    emitter.emit(16);
 
     expect(latestData).toBeNull();
 
@@ -320,35 +323,35 @@ describe("Emitter module", () => {
     done();
   });
 
-  it("buffer() with function releaser", done => {
-    const subject = new Emitter<number>();
+  it("emitter.buffer() with function releaser", done => {
+    const emitter = new Emitter<number>();
     const releaser = (buffer: number[]): boolean => (buffer.length === 4);
 
-    subject.buffer(releaser).subscribe(data => {
+    emitter.buffer(releaser).subscribe(data => {
       expect(data).toMatchObject([4, 8, 15, 16]);
       done();
     });
 
-    subject.emit(4);
-    subject.emit(8);
-    subject.emit(15);
-    subject.emit(16);
+    emitter.emit(4);
+    emitter.emit(8);
+    emitter.emit(15);
+    emitter.emit(16);
   });
 
-  it("debounce()", done => {
-    const subject = new Emitter();
+  it("emitter.debounce()", done => {
+    const emitter = new Emitter();
     const releaser = new Emitter();
 
     let latestData: number = null;
 
-    subject.debounce(releaser).subscribe(data => {
+    emitter.debounce(releaser).subscribe(data => {
       latestData = data;
     });
 
-    subject.emit(4);
-    subject.emit(8);
-    subject.emit(15);
-    subject.emit(16);
+    emitter.emit(4);
+    emitter.emit(8);
+    emitter.emit(15);
+    emitter.emit(16);
 
     expect(latestData).toBeNull();
 
@@ -358,24 +361,24 @@ describe("Emitter module", () => {
     done();
   });
 
-  it("debounceTime()", done => {
-    const subject = new Emitter();
+  it("emitter.debounceTime()", done => {
+    const emitter = new Emitter();
 
     let latestData: number = null;
 
-    subject.debounceTime(1000).subscribe(data => {
+    emitter.debounceTime(1000).subscribe(data => {
       latestData = data;
     });
 
-    subject.emit(4);
+    emitter.emit(4);
     setTimeout(() => {
-      subject.emit(8);
+      emitter.emit(8);
     }, 100);
     setTimeout(() => {
-      subject.emit(15);
+      emitter.emit(15);
     }, 200);
     setTimeout(() => {
-      subject.emit(16);
+      emitter.emit(16);
     }, 300);
 
     setTimeout(() => {
@@ -388,51 +391,104 @@ describe("Emitter module", () => {
     }, 500);
   });
 
-  it("audit()", done => {
-    const subjectA = new Emitter();
+  it("emitter.audit()", done => {
+    const emitterA = new Emitter();
     const releaser = new Emitter();
 
-    subjectA.audit(releaser).subscribe(data => {
+    emitterA.audit(releaser).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subjectA.emit({
+    emitterA.emit({
       foo: "foo"
     });
 
     releaser.emit();
 
-    subjectA.emit({
+    emitterA.emit({
       foo: "bar"
     });
   });
 
-  it("auditTime()", done => {
-    const subjectA = new Emitter();
+  it("emitter.auditTime()", done => {
+    const emitterA = new Emitter();
 
-    subjectA.auditTime(200).subscribe(data => {
+    emitterA.auditTime(200).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
 
-    subjectA.emit({
+    emitterA.emit({
       foo: "foo"
     });
 
     setTimeout(() => {
-      subjectA.emit({
+      emitterA.emit({
         foo: "bar"
       });
     }, 300);
   });
 
+  it("emitter.thenDispatch()", done => {
+    const emitter = new Emitter();
+    const $el = document.createElement("div");
+
+    $el.addEventListener("custom", (event: CustomEvent<FooData>) => {
+      expect(event.detail).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    emitter.thenDispatch("custom", $el);
+
+    emitter.emit({ foo: "bar" });
+  });
+
+});
+
+describe("Emitter operators and sources", () => {
+
+  it("merge()", done => {
+    const $a = document.createElement("a");
+    const $b = document.createElement("a");
+    const $c = document.createElement("a");
+    const emitterA = fromListener("click", $a).start();
+    const emitterB = fromListener("click", $b).start();
+    const emitterC = fromListener("click", $c).start();
+
+    const emitterM = merge<Event>(
+      emitterA,
+      emitterB,
+      emitterC
+    ).start();
+
+    const results: Event[] = [];
+
+    emitterM.subscribe(data => {
+      results.push(data);
+    });
+
+    $a.click();
+    $c.click();
+    $b.click();
+
+    emitterM.stop();
+
+    $a.click();
+
+    setTimeout(() => {
+      expect(results).toHaveLength(3);
+      expect(results[0]).toBeInstanceOf(Event);
+      done();
+    }, 100);
+  });
+
   it("Emitter fromInterval() with maxTimes", done => {
-    const subject = fromInterval(0, 100, 5).start();
+    const emitter = fromInterval(0, 100, 5).start();
 
     const passedData: IntervalData[] = [];
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       passedData.push(data);
     });
 
@@ -449,14 +505,14 @@ describe("Emitter module", () => {
   });
 
   it("Emitter fromInterval() unlimited", done => {
-    const subject = fromInterval(0, 100).start();
+    const emitter = fromInterval(0, 100).start();
 
     const passedData: IntervalData[] = [];
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       passedData.push(data);
       if(data.times === 5) {
-        subject.stop();
+        emitter.stop();
       }
     });
 
@@ -476,9 +532,9 @@ describe("Emitter module", () => {
     const prom = new Promise<FooData>((ok) => {
       setTimeout(() => ok({ foo: "bar" }), 200);
     });
-    const subject = fromPromise(prom);
+    const emitter = fromPromise(prom);
 
-    subject.subscribe(data => {
+    emitter.subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
@@ -486,13 +542,173 @@ describe("Emitter module", () => {
 
   it("Emitter fromListener()", done => {
     const $a = document.createElement("a");
-    const subject = fromListener("click", $a).start();
+    const emitter = fromListener("click", $a).start();
 
-    subject.subscribe(data => {
-      expect(data).toBeInstanceOf(Event);
-      done();
+    let result: Event;
+
+    emitter.subscribe(data => {
+      result = data;
     });
 
     $a.click();
+
+    emitter.stop();
+
+    $a.click();
+
+    setTimeout(() => {
+      expect(result).toBeInstanceOf(Event);
+      done();
+    }, 100);
   });
+
+  it("Emitter fromObserver()", done => {
+    let value: string = null;
+    const emitter = fromObserver(() => value, 80).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    setTimeout(() => (value = "foo"), 100);
+    setTimeout(() => (value = "bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => (value = "test"), 400);
+    setTimeout(() => {
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+  it("Emitter fromStorage()", done => {
+    const emitter = fromStorage("testItem", window.localStorage, 80).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    setTimeout(() => window.localStorage.setItem("testItem", "foo"), 100);
+    setTimeout(() => window.localStorage.setItem("testItem", "bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => window.localStorage.setItem("testItem", "test"), 400);
+    setTimeout(() => {
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+  it("Emitter fromObserver() promise", done => {
+    let value: string = null;
+    const emitter = fromObserver(() => Promise.resolve(value), 80).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    setTimeout(() => (value = "foo"), 100);
+    setTimeout(() => (value = "bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => (value = "test"), 400);
+    setTimeout(() => {
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+  it("Emitter fromCookie()", done => {
+    const emitter = fromCookie("testCookie", 80).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    setTimeout(() => (document.cookie = "testCookie=foo"), 100);
+    setTimeout(() => (document.cookie = "testCookie=bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => (document.cookie = "testCookie=test"), 400);
+    setTimeout(() => {
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+  it("Emitter fromSearchParam()", done => {
+    const emitter = fromSearchParam("test", 80).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    const changeSearch = (search: string): void => {
+      delete window.location;
+      (window as any).location = {
+        search
+      };
+    };
+
+    setTimeout(() => changeSearch("?test=foo"), 100);
+    setTimeout(() => changeSearch("?test=bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => changeSearch("?test=test"), 400);
+    setTimeout(() => {
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+  it("Emitter fromWebSocket()", done => {
+    const server = new WS("ws://localhost:1234");
+    const client = new WebSocket("ws://localhost:1234");
+
+    const emitter = fromWebSocket(client).start();
+    const results: string[] = [];
+
+    emitter.subscribe(data => {
+      results.push(data);
+    });
+
+    setTimeout(() => server.send("foo"), 100);
+    setTimeout(() => server.send("bar"), 200);
+    setTimeout(() => emitter.stop(), 300);
+    setTimeout(() => server.send("test"), 400);
+    setTimeout(() => {
+      server.close();
+      expect(results).toEqual(["foo", "bar"]);
+      done();
+    }, 500);
+  });
+
+
+  it("Emitter fromFetchPolling()", done => {
+    let counter: number = 0;
+    (global as any).fetch = jest.fn(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve(`num=${++counter}`)
+      });
+    });
+
+    const emitter = fromFetchPolling(100, "http://test/path").start();
+    const results: string[] = [];
+
+    emitter.subscribe(async (res: Response) => {
+      results.push(await res.text());
+    });
+
+    setTimeout(() => {
+      emitter.stop();
+    }, 500);
+
+    setTimeout(() => {
+      expect(results).toEqual(["num=1", "num=2", "num=3", "num=4", "num=5"]);
+      done();
+    }, 700);
+  });
+
 });
