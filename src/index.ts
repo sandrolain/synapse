@@ -394,7 +394,10 @@ export class Emitter<T=any> {
   }
 }
 
-// TODO: docs
+/**
+ * Create a new *Emitter* that receives emissions from *Emitter* instances passed as arguments
+ * @param args As arguments accepts *Emitter* instances from which to receive data
+ */
 export function merge<T=any> (...args: Emitter[]): Emitter<T> {
   const emitter = new Emitter<T>();
   const subscriptions: Subscription<T>[] = [];
@@ -553,7 +556,6 @@ export function fromObserver<T=any> (observeFn: () => T | Promise<T>, interval: 
 }
 
 
-// TODO: test
 /**
  * Generates an {@link Emitter} that emit at the change in the value of an item in a Storage area<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
@@ -625,7 +627,6 @@ export function fromWebSocket<T=any> (ws: WebSocket): Emitter<T> {
 }
 
 
-// TODO: test
 /**
  * Generates an {@link Emitter} which makes a fetch call at regular intervals and emit the received *Response*<br/><br/>
  * To start listening it is necessary to execute the **start()** method of the obtained Emitter instance<br/>
