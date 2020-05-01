@@ -4,7 +4,7 @@
 
 ---
 
-Synapses provides a **light communication system** based on observables instances called *Emitter*, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to **filter, manipulate and forward** them to other instances observable or other subjects.
+Synapses provides a **light reactive communication system** based on observables instances called *Emitter*, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to **filter, manipulate and forward** them to other instances observable or other subjects.
 
 Processing information creates a chain of observable nodes that you can subscribe to.
 

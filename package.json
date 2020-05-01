@@ -1,7 +1,7 @@
 {
   "name": "synapses",
   "version": "0.1.0",
-  "description": "Light library for data propagation",
+  "description": "Light library for reactive data propagation",
   "author": "Sandro Lain",
   "main": "dist/umd/index.js",
   "browser": "dist/umd/index.js",
