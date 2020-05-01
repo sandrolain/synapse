@@ -3,7 +3,9 @@
  */
 
 import WS from "jest-websocket-mock";
-import { Emitter, IntervalData, fromInterval, fromPromise, fromListener, merge, fromStorage, fromObserver, fromCookie, fromSearchParam, fromWebSocket, fromFetchPolling } from "./index";
+import { Emitter } from "./index";
+import { IntervalData, fromInterval, fromPromise, fromListener, merge, fromStorage, fromObserver, fromCookie, fromSearchParam, fromWebSocket, fromFetchPolling } from "./initiators";
+import { timeoutReleaser, ReleaseExecutionFunction } from "./releasers";
 
 type TestData = Record<string, string>;
 interface FooData {
@@ -325,7 +327,11 @@ describe("Emitter instance", () => {
 
   it("emitter.buffer() with function releaser", done => {
     const emitter = new Emitter<number>();
-    const releaser = (buffer: number[]): boolean => (buffer.length === 4);
+    const releaser = (buffer: number[], release: ReleaseExecutionFunction): void => {
+      if((buffer.includes(16))) {
+        release();
+      }
+    };
 
     emitter.buffer(releaser).subscribe(data => {
       expect(data).toMatchObject([4, 8, 15, 16]);
@@ -361,12 +367,12 @@ describe("Emitter instance", () => {
     done();
   });
 
-  it("emitter.debounceTime()", done => {
+  it("emitter.debounce() with timeout releaser", done => {
     const emitter = new Emitter();
 
     let latestData: number = null;
 
-    emitter.debounceTime(1000).subscribe(data => {
+    emitter.debounce(timeoutReleaser(1000)).subscribe(data => {
       latestData = data;
     });
 
