@@ -5,7 +5,7 @@
 import WS from "jest-websocket-mock";
 import { Emitter } from "./index";
 import { IntervalData, fromInterval, fromPromise, fromListener, merge, fromStorage, fromObserver, fromCookie, fromSearchParam, fromWebSocket, fromFetchPolling } from "./initiators";
-import { timeoutReleaser, ReleaseExecutionFunction } from "./releasers";
+import { timeoutReleaser, emitterReleaser, ReleaseExecutionFunction } from "./releasers";
 
 type TestData = Record<string, string>;
 interface FooData {
@@ -302,13 +302,13 @@ describe("Emitter instance", () => {
     });
   });
 
-  it("emitter.buffer() with Emitter releaser", done => {
-    const emitter = new Emitter();
+  it("emitter.buffer() with emitterReleaser()", done => {
+    const emitter = new Emitter<number>();
     const releaser = new Emitter();
 
     let latestData: number[] = null;
 
-    emitter.buffer(releaser).subscribe(data => {
+    emitter.buffer(emitterReleaser(releaser)).subscribe(data => {
       latestData = data;
     });
 
@@ -325,11 +325,11 @@ describe("Emitter instance", () => {
     done();
   });
 
-  it("emitter.buffer() with function releaser", done => {
+  it("emitter.buffer() with custom releaser", done => {
     const emitter = new Emitter<number>();
     const releaser = (buffer: number[], release: ReleaseExecutionFunction): void => {
       if((buffer.includes(16))) {
-        release();
+        release(buffer);
       }
     };
 
@@ -344,13 +344,13 @@ describe("Emitter instance", () => {
     emitter.emit(16);
   });
 
-  it("emitter.debounce()", done => {
+  it("emitter.debounce() with emitterReleaser()", done => {
     const emitter = new Emitter();
     const releaser = new Emitter();
 
     let latestData: number = null;
 
-    emitter.debounce(releaser).subscribe(data => {
+    emitter.debounce(emitterReleaser(releaser)).subscribe(data => {
       latestData = data;
     });
 
@@ -367,7 +367,7 @@ describe("Emitter instance", () => {
     done();
   });
 
-  it("emitter.debounce() with timeout releaser", done => {
+  it("emitter.debounce() with timeoutReleaser()", done => {
     const emitter = new Emitter();
 
     let latestData: number = null;
@@ -397,11 +397,11 @@ describe("Emitter instance", () => {
     }, 500);
   });
 
-  it("emitter.audit()", done => {
+  it("emitter.audit() with emitterReleaser()", done => {
     const emitterA = new Emitter();
     const releaser = new Emitter();
 
-    emitterA.audit(releaser).subscribe(data => {
+    emitterA.audit(emitterReleaser(releaser)).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });
@@ -417,10 +417,10 @@ describe("Emitter instance", () => {
     });
   });
 
-  it("emitter.auditTime()", done => {
+  it("emitter.audit() with timeoutReleaser()", done => {
     const emitterA = new Emitter();
 
-    emitterA.auditTime(200).subscribe(data => {
+    emitterA.audit(timeoutReleaser(200)).subscribe(data => {
       expect(data).toMatchObject({ foo: "bar" });
       done();
     });

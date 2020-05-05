@@ -240,96 +240,56 @@ export class Emitter<T=any> {
 
   /**
    * Generate a new {@link Emitter} that receive data one time after the *releaseEmitter* has released the propagation
-   * @param releaseEmitter {@link Emitter} that permit the propagation
+   * @param releaser {@link ReleaseFunction} called after every received data and pass a release-execution function that allow the release for the newer data
    */
-  audit (releaseEmitter: Emitter): Emitter<T> {
+  audit (releaser: ReleaseFunction<T>): Emitter<T> {
     const emitter = this.getChildEmitter<T>();
     let ok: boolean = false;
-    this.subscribe((data: any) => {
-      if(ok) {
-        emitter.emit(data);
-        ok = false;
-      }
-    });
-    releaseEmitter.subscribe(() => {
+    const releaseAndReset: ReleaseExecutionFunction<T> = (): void => {
       ok = true;
-    });
-    return emitter;
-  }
-
-  /**
-   * Generate a new {@link Emitter} that receive data one time after a predefined time
-   * @param time Time (ms) to wait before next propagation
-   */
-  auditTime (time: number): Emitter<T> {
-    const emitter = this.getChildEmitter<T>();
-    let ok: boolean = false;
-    let emitterTO: any;
-    this.subscribe((data: any) => {
-      if(ok) {
-        emitter.emit(data);
-        ok = false;
-      }
-      window.clearTimeout(emitterTO);
-      emitterTO = window.setTimeout(() => (ok = true), time);
-    });
-    emitterTO = window.setTimeout(() => (ok = true), time);
-    return emitter;
-  }
-
-  /**
-   * Generate a new {@link Emitter} that receive latest data collected when a *releaseEmitter* has released the propagation
-   * @param releaseEmitter {@link Emitter} that permit the propagation, or releaser function called after every received data and pass a release-execution function that release the last data if invoked
-   */
-  // TODO: test with release function
-  debounce (releaser: Emitter | ReleaseFunction<T>): Emitter<T> {
-    const emitter = this.getChildEmitter<T>();
-    const releaserFunction = (typeof releaser === "function") ? releaser : null;
-    let lastData: T = undefined;
-    const releaseAndReset: ReleaseExecutionFunction = (): void => {
-      if(lastData !== undefined) {
-        emitter.emit(lastData);
-        lastData = undefined;
-      }
     };
     this.subscribe((data: any) => {
-      lastData = data;
-      if(releaserFunction) {
-        releaserFunction(data, releaseAndReset);
+      if(ok) {
+        emitter.emit(data);
+        ok = false;
       }
+      releaser(data, releaseAndReset);
     });
-    if(releaser instanceof Emitter) {
-      releaser.subscribe(() => {
-        releaseAndReset();
-      });
-    }
+    return emitter;
+  }
+
+  /**
+   * Generate a new {@link Emitter} that receive latest data collected when a *ReleaseFunction* has released the propagation
+   * @param releaser {@link ReleaseFunction} called after every received data and pass a release-execution function that release the data if invoked
+   */
+  // TODO: test with release function
+  debounce (releaser: ReleaseFunction<T>): Emitter<T> {
+    const emitter = this.getChildEmitter<T>();
+    const releaseAndReset: ReleaseExecutionFunction<T> = (data: T): void => {
+      emitter.emit(data);
+    };
+    this.subscribe((data: any) => {
+      releaser(data, releaseAndReset);
+    });
     return emitter;
   }
 
   /**
    * Generate a new {@link Emitter} that receive an array of buffered data after the *releaseEmitter* has released the propagation
-   * @param releaseEmitter {@link Emitter} that permit the propagation, or releaser function called after every buffer population and pass a release-execution function that release the buffer if invoked
+   * @param releaser {s@link ReleaseFunction} called after every buffer population and pass a release-execution function that release the buffer if invoked
    */
-  buffer (releaser: Emitter | ReleaseFunction<T[]>): Emitter<T[]> {
+  buffer (releaser: ReleaseFunction<T[]>): Emitter<T[]> {
     const emitter = this.getChildEmitter<T[]>();
-    const releaserFunction = (typeof releaser === "function") ? releaser : null;
     let bufferData: T[] = [];
-    const releaseAndReset: ReleaseExecutionFunction = (): void => {
+    const releaseAndReset: ReleaseExecutionFunction<T[]> = (): void => {
       const outBuffer = bufferData;
       bufferData = [];
       emitter.emit(outBuffer);
     };
     this.subscribe((data: any) => {
       bufferData.push(data);
-      if(releaserFunction) {
-        releaserFunction(bufferData.slice(), releaseAndReset);
-      }
+      releaser(bufferData.slice(), releaseAndReset);
     });
-    if(releaser instanceof Emitter) {
-      releaser.subscribe(() => {
-        releaseAndReset();
-      });
-    }
     return emitter;
   }
 
