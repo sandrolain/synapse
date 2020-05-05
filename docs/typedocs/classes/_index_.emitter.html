@@ -112,16 +112,12 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#audit" class="tsd-kind-icon">audit</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#audittime" class="tsd-kind-icon">audit<wbr>Time</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#buffer" class="tsd-kind-icon">buffer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#debounce" class="tsd-kind-icon">debounce</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#debouncetime" class="tsd-kind-icon">debounce<wbr>Time</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#delay" class="tsd-kind-icon">delay</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#emit" class="tsd-kind-icon">emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#emitall" class="tsd-kind-icon">emit<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#filter" class="tsd-kind-icon">filter</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_index_.emitter.html#map" class="tsd-kind-icon">map</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#pass" class="tsd-kind-icon">pass</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#promise" class="tsd-kind-icon">promise</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_index_.emitter.html#propagateemit" class="tsd-kind-icon">propagate<wbr>Emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_index_.emitter.html#reduce" class="tsd-kind-icon">reduce</a></li>
@@ -133,6 +129,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#subscribed" class="tsd-kind-icon">subscribed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#thendispatch" class="tsd-kind-icon">then<wbr>Dispatch</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_index_.emitter.html#wait" class="tsd-kind-icon">wait</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
@@ -156,7 +153,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L65">index.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L54">index.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -183,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">replay<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L65">index.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L54">index.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -193,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">subscriptions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_index_.html#subscriber" class="tsd-signature-type">Subscriber</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new Set()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L58">index.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L47">index.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -201,78 +198,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="audit" class="tsd-anchor"></a>
-					<h3>audit</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">audit<span class="tsd-signature-symbol">(</span>releaseEmitter<span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L256">index.ts:256</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after the <em>releaseEmitter</em> has released the propagation</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>releaseEmitter: <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p><a href="_index_.emitter.html">Emitter</a> that permit the propagation</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="audittime" class="tsd-anchor"></a>
-					<h3>audit<wbr>Time</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">audit<wbr>Time<span class="tsd-signature-symbol">(</span>time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L275">index.ts:275</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data one time after a predefined time</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Time (ms) to wait before next propagation</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="buffer" class="tsd-anchor"></a>
 					<h3>buffer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">(</span>releaser<span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol"> | </span><a href="../modules/_index_.html#bufferreleasefunction" class="tsd-signature-type">BufferReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">buffer<span class="tsd-signature-symbol">(</span>releaser<span class="tsd-signature-symbol">: </span><a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L336">index.ts:336</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L268">index.ts:268</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -283,103 +218,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>releaser: <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol"> | </span><a href="../modules/_index_.html#bufferreleasefunction" class="tsd-signature-type">BufferReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>releaser: <a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p><a href="../modules/_releasers_.html#releasefunction">ReleaseFunction</a> called after every buffer population and pass a release-execution function that release the buffer if invoked</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="debounce" class="tsd-anchor"></a>
-					<h3>debounce</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">debounce<span class="tsd-signature-symbol">(</span>releaseEmitter<span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L295">index.ts:295</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected when a <em>releaseEmitter</em> has released the propagation</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>releaseEmitter: <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p><a href="_index_.emitter.html">Emitter</a> that permit the propagation</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="debouncetime" class="tsd-anchor"></a>
-					<h3>debounce<wbr>Time</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">debounce<wbr>Time<span class="tsd-signature-symbol">(</span>time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L314">index.ts:314</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected if a predefine time is elapsed without new propagation</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Time (ms) to wait for the data propagation</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="delay" class="tsd-anchor"></a>
-					<h3>delay</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">delay<span class="tsd-signature-symbol">(</span>delay<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L244">index.ts:244</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive data after a delay time</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>delay: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The delay time (ms) before the data will be propagated</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -393,7 +238,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L164">index.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L153">index.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -424,7 +269,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L189">index.ts:189</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L178">index.ts:178</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -455,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L199">index.ts:199</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L188">index.ts:188</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -486,7 +331,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L213">index.ts:213</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L202">index.ts:202</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -514,6 +359,37 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="pass" class="tsd-anchor"></a>
+					<h3>pass</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">pass<span class="tsd-signature-symbol">(</span>releaser<span class="tsd-signature-symbol">: </span><a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L233">index.ts:233</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive the newest data one time after the <em>ReleaseFunction</em> has released the propagation</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>releaser: <a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p><a href="../modules/_releasers_.html#releasefunction">ReleaseFunction</a> called after every received data and pass a release-execution function that allow the release for the newer data</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="promise" class="tsd-anchor"></a>
 					<h3>promise</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -523,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L150">index.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L139">index.ts:139</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -545,7 +421,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L177">index.ts:177</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L166">index.ts:166</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -571,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L227">index.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L216">index.ts:216</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -614,7 +490,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L78">index.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L67">index.ts:67</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -645,7 +521,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L362">index.ts:362</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L286">index.ts:286</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -667,7 +543,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L372">index.ts:372</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L296">index.ts:296</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -689,7 +565,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L106">index.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L95">index.ts:95</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -720,7 +596,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L140">index.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L129">index.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -751,7 +627,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L132">index.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L121">index.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -782,7 +658,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L384">index.ts:384</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L308">index.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -819,7 +695,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L124">index.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L113">index.ts:113</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -837,6 +713,37 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="wait" class="tsd-anchor"></a>
+					<h3>wait</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">wait<span class="tsd-signature-symbol">(</span>releaser<span class="tsd-signature-symbol">: </span><a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L253">index.ts:253</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a new <a href="_index_.emitter.html">Emitter</a> that receive latest data collected when a <em>ReleaseFunction</em> has released the propagation</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>releaser: <a href="../modules/_releasers_.html#releasefunction" class="tsd-signature-type">ReleaseFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p><a href="../modules/_releasers_.html#releasefunction">ReleaseFunction</a> called after every received data and pass a release-execution function that release the data if invoked</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_index_.emitter.html" class="tsd-signature-type">Emitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Object literals</h2>
@@ -846,7 +753,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L59">index.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L48">index.ts:48</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -855,7 +762,7 @@
 						<div class="tsd-signature tsd-kind-icon">replay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L60">index.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L49">index.ts:49</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -865,7 +772,7 @@
 						<div class="tsd-signature tsd-kind-icon">replay<wbr>Max<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L61">index.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L50">index.ts:50</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -875,7 +782,7 @@
 						<div class="tsd-signature tsd-kind-icon">start<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L62">index.ts:62</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L51">index.ts:51</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -885,7 +792,7 @@
 						<div class="tsd-signature tsd-kind-icon">stop<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/d3eb298/src/index.ts#L63">index.ts:63</a></li>
+								<li>Defined in <a href="https://github.com/sandrolain/synapses/blob/909f71d/src/index.ts#L52">index.ts:52</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -900,6 +807,12 @@
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="../modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_initiators_.html">&quot;initiators&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/_releasers_.html">&quot;releasers&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -920,22 +833,7 @@
 								<a href="_index_.emitter.html#subscriptions" class="tsd-kind-icon">subscriptions</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_index_.emitter.html#audit" class="tsd-kind-icon">audit</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_index_.emitter.html#audittime" class="tsd-kind-icon">audit<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_index_.emitter.html#buffer" class="tsd-kind-icon">buffer</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_index_.emitter.html#debounce" class="tsd-kind-icon">debounce</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_index_.emitter.html#debouncetime" class="tsd-kind-icon">debounce<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_index_.emitter.html#delay" class="tsd-kind-icon">delay</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_index_.emitter.html#emit" class="tsd-kind-icon">emit</a>
@@ -948,6 +846,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_index_.emitter.html#map" class="tsd-kind-icon">map</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_index_.emitter.html#pass" class="tsd-kind-icon">pass</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_index_.emitter.html#promise" class="tsd-kind-icon">promise</a>
@@ -982,6 +883,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_index_.emitter.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_index_.emitter.html#wait" class="tsd-kind-icon">wait</a>
+							</li>
 							<li class=" tsd-kind-object-literal tsd-parent-kind-class tsd-is-private">
 								<a href="_index_.emitter.html#options" class="tsd-kind-icon">options</a>
 							</li>
@@ -995,17 +899,8 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/_index_.emitteroptions.html" class="tsd-kind-icon">Emitter<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_index_.intervaldata.html" class="tsd-kind-icon">Interval<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../modules/_index_.html#bufferreleasefunction" class="tsd-kind-icon">Buffer<wbr>Release<wbr>Function</a>
-					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../modules/_index_.html#filterfunction" class="tsd-kind-icon">Filter<wbr>Function</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/_index_.html#listenertarget" class="tsd-kind-icon">Listener<wbr>Target</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../modules/_index_.html#mappingfunction" class="tsd-kind-icon">Mapping<wbr>Function</a>
@@ -1015,36 +910,6 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../modules/_index_.html#subscriber" class="tsd-kind-icon">Subscriber</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#fromcookie" class="tsd-kind-icon">from<wbr>Cookie</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#fromfetchpolling" class="tsd-kind-icon">from<wbr>Fetch<wbr>Polling</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#frominterval" class="tsd-kind-icon">from<wbr>Interval</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#fromlistener" class="tsd-kind-icon">from<wbr>Listener</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../modules/_index_.html#fromobserver" class="tsd-kind-icon">from<wbr>Observer</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../modules/_index_.html#frompromise" class="tsd-kind-icon">from<wbr>Promise</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#fromsearchparam" class="tsd-kind-icon">from<wbr>Search<wbr>Param</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/_index_.html#fromstorage" class="tsd-kind-icon">from<wbr>Storage</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../modules/_index_.html#fromwebsocket" class="tsd-kind-icon">from<wbr>Web<wbr>Socket</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../modules/_index_.html#merge" class="tsd-kind-icon">merge</a>
 					</li>
 				</ul>
 			</nav>
