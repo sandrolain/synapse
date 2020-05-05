@@ -5,7 +5,7 @@
 import WS from "jest-websocket-mock";
 import { Emitter } from "./index";
 import { IntervalData, fromInterval, fromPromise, fromListener, merge, fromStorage, fromObserver, fromCookie, fromSearchParam, fromWebSocket, fromFetchPolling } from "./initiators";
-import { timeoutReleaser, emitterReleaser, ReleaseExecutionFunction } from "./releasers";
+import { timeoutReleaser, emitterReleaser, ReleaseExecutionFunction, debounceReleaser, delayReleaser, countReleaser, lengthReleaser } from "./releasers";
 
 type TestData = Record<string, string>;
 interface FooData {
@@ -281,12 +281,96 @@ describe("Emitter instance", () => {
     });
   });
 
-  it("emitter.delay()", done => {
+  it("emitter.thenDispatch()", done => {
+    const emitter = new Emitter();
+    const $el = document.createElement("div");
+
+    $el.addEventListener("custom", (event: CustomEvent<FooData>) => {
+      expect(event.detail).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    emitter.thenDispatch("custom", $el);
+
+    emitter.emit({ foo: "bar" });
+  });
+
+});
+
+describe("emitter.pass()", () => {
+
+  it("emitter.pass() with emitterReleaser()", done => {
+    const emitterA = new Emitter();
+    const releaser = new Emitter();
+
+    emitterA.pass(emitterReleaser(releaser)).subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    emitterA.emit({
+      foo: "foo"
+    });
+
+    releaser.emit();
+
+    emitterA.emit({
+      foo: "bar"
+    });
+  });
+
+  it("emitter.pass() with timeoutReleaser()", done => {
+    const emitterA = new Emitter();
+
+    emitterA.pass(timeoutReleaser(200)).subscribe(data => {
+      expect(data).toMatchObject({ foo: "bar" });
+      done();
+    });
+
+    emitterA.emit({
+      foo: "foo"
+    });
+
+    setTimeout(() => {
+      emitterA.emit({
+        foo: "bar"
+      });
+    }, 300);
+  });
+
+});
+
+describe("emitter.wait()", () => {
+
+  it("emitter.wait() with emitterReleaser()", done => {
+    const emitter = new Emitter();
+    const releaser = new Emitter();
+
+    let latestData: number = null;
+
+    emitter.wait(emitterReleaser(releaser)).subscribe(data => {
+      latestData = data;
+    });
+
+    emitter.emit(4);
+    emitter.emit(8);
+    emitter.emit(15);
+    emitter.emit(16);
+
+    expect(latestData).toBeNull();
+
+    releaser.emit();
+
+    expect(latestData).toEqual(16);
+    done();
+  });
+
+  it("emitter.wait() with delayReleaser()", done => {
     const emitter = new Emitter();
 
     let latestData: number = 0;
 
-    emitter.delay(1000).subscribe(data => {
+    emitter.wait(delayReleaser(500)).subscribe(data => {
       latestData = data;
     });
 
@@ -296,11 +380,130 @@ describe("Emitter instance", () => {
       expect(latestData).toEqual(0);
 
       setTimeout(() => {
+        expect(latestData).toEqual(0);
+      }, 400);
+
+      setTimeout(() => {
         expect(latestData).toEqual(42);
         done();
-      }, 1100);
+      }, 550);
     });
   });
+
+  it("emitter.wait() with debounceReleaser()", done => {
+    const emitter = new Emitter();
+
+    let latestData: number = null;
+
+    emitter.wait(debounceReleaser(1000)).subscribe(data => {
+      latestData = data;
+    });
+
+    emitter.emit(4);
+    setTimeout(() => {
+      emitter.emit(8);
+    }, 100);
+    setTimeout(() => {
+      emitter.emit(15);
+    }, 200);
+    setTimeout(() => {
+      emitter.emit(16);
+    }, 300);
+
+    setTimeout(() => {
+      expect(latestData).toBeNull();
+
+      setTimeout(() => {
+        expect(latestData).toEqual(16);
+        done();
+      }, 1000);
+    }, 500);
+  });
+
+  it("emitter.wait() with timeoutReleaser()", done => {
+    const emitter = new Emitter();
+
+    let latestData: number = 0;
+
+    emitter.wait(timeoutReleaser(500)).subscribe(data => {
+      latestData = data;
+    });
+
+    const prom = emitter.emit(42);
+
+    prom.then(() => {
+      expect(latestData).toEqual(0);
+
+      setTimeout(() => {
+        expect(latestData).toEqual(0);
+        emitter.emit(84);
+      }, 400);
+
+      setTimeout(() => {
+        expect(latestData).toEqual(42);
+        done();
+      }, 550);
+    });
+  });
+
+  it("emitter.wait() with countReleaser()", done => {
+    const emitter = new Emitter();
+
+    const receivedData: number[] = [];
+
+    emitter.wait(countReleaser(3)).subscribe(data => {
+      receivedData.push(data);
+    });
+
+    emitter.emit(4);
+    setTimeout(() => {
+      emitter.emit(8);
+    }, 100);
+    setTimeout(() => {
+      expect(receivedData).toEqual([]);
+      emitter.emit(15);
+    }, 200);
+    setTimeout(() => {
+      expect(receivedData).toEqual([15]);
+      emitter.emit(16);
+    }, 300);
+    setTimeout(() => {
+      expect(receivedData).toEqual([15]);
+      done();
+    }, 400);
+  });
+
+  it("emitter.wait() with lengthReleaser()", done => {
+    const emitter = new Emitter<number[]>();
+
+    let receivedData: number[] = null;
+
+    emitter.wait(lengthReleaser(15)).subscribe(data => {
+      receivedData = data;
+    });
+
+    emitter.emit(Array(4));
+    setTimeout(() => {
+      expect(receivedData).toBeNull();
+      emitter.emit(Array(8));
+    }, 100);
+    setTimeout(() => {
+      expect(receivedData).toBeNull();
+      emitter.emit(Array(15));
+    }, 200);
+    setTimeout(() => {
+      expect(receivedData).toHaveLength(15);
+      emitter.emit(Array(16));
+    }, 300);
+    setTimeout(() => {
+      expect(receivedData).toHaveLength(15);
+      done();
+    }, 400);
+  });
+
+});
+
+describe("emitter.buffer()", () => {
 
   it("emitter.buffer() with emitterReleaser()", done => {
     const emitter = new Emitter<number>();
@@ -342,112 +545,6 @@ describe("Emitter instance", () => {
     emitter.emit(8);
     emitter.emit(15);
     emitter.emit(16);
-  });
-
-  it("emitter.debounce() with emitterReleaser()", done => {
-    const emitter = new Emitter();
-    const releaser = new Emitter();
-
-    let latestData: number = null;
-
-    emitter.debounce(emitterReleaser(releaser)).subscribe(data => {
-      latestData = data;
-    });
-
-    emitter.emit(4);
-    emitter.emit(8);
-    emitter.emit(15);
-    emitter.emit(16);
-
-    expect(latestData).toBeNull();
-
-    releaser.emit();
-
-    expect(latestData).toEqual(16);
-    done();
-  });
-
-  it("emitter.debounce() with timeoutReleaser()", done => {
-    const emitter = new Emitter();
-
-    let latestData: number = null;
-
-    emitter.debounce(timeoutReleaser(1000)).subscribe(data => {
-      latestData = data;
-    });
-
-    emitter.emit(4);
-    setTimeout(() => {
-      emitter.emit(8);
-    }, 100);
-    setTimeout(() => {
-      emitter.emit(15);
-    }, 200);
-    setTimeout(() => {
-      emitter.emit(16);
-    }, 300);
-
-    setTimeout(() => {
-      expect(latestData).toBeNull();
-
-      setTimeout(() => {
-        expect(latestData).toEqual(16);
-        done();
-      }, 1000);
-    }, 500);
-  });
-
-  it("emitter.audit() with emitterReleaser()", done => {
-    const emitterA = new Emitter();
-    const releaser = new Emitter();
-
-    emitterA.audit(emitterReleaser(releaser)).subscribe(data => {
-      expect(data).toMatchObject({ foo: "bar" });
-      done();
-    });
-
-    emitterA.emit({
-      foo: "foo"
-    });
-
-    releaser.emit();
-
-    emitterA.emit({
-      foo: "bar"
-    });
-  });
-
-  it("emitter.audit() with timeoutReleaser()", done => {
-    const emitterA = new Emitter();
-
-    emitterA.audit(timeoutReleaser(200)).subscribe(data => {
-      expect(data).toMatchObject({ foo: "bar" });
-      done();
-    });
-
-    emitterA.emit({
-      foo: "foo"
-    });
-
-    setTimeout(() => {
-      emitterA.emit({
-        foo: "bar"
-      });
-    }, 300);
-  });
-
-  it("emitter.thenDispatch()", done => {
-    const emitter = new Emitter();
-    const $el = document.createElement("div");
-
-    $el.addEventListener("custom", (event: CustomEvent<FooData>) => {
-      expect(event.detail).toMatchObject({ foo: "bar" });
-      done();
-    });
-
-    emitter.thenDispatch("custom", $el);
-
-    emitter.emit({ foo: "bar" });
   });
 
 });

@@ -30,13 +30,27 @@ export function delayReleaser<T=any> (time: number): ReleaseFunction<any> {
 
 // TODO: docs
 // TODO: test
-export function timeoutReleaser<T=any> (time: number): ReleaseFunction<any> {
+export function debounceReleaser<T=any> (time: number): ReleaseFunction<any> {
   let emitterTO: number;
   return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
     if(emitterTO) {
       window.clearTimeout(emitterTO);
     }
     emitterTO = window.setTimeout(() => releaser(data), time);
+  };
+}
+
+// TODO: docs
+// TODO: test
+export function timeoutReleaser<T=any> (time: number): ReleaseFunction<any> {
+  let emitterTO: number = null;
+  return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
+    if(emitterTO === null) {
+      emitterTO = window.setTimeout(() => {
+        emitterTO = null;
+        releaser(data);
+      }, time);
+    }
   };
 }
 
