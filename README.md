@@ -10,7 +10,7 @@ Processing information creates a chain of observable nodes that you can subscrib
 
 The library is also available of some methods for monitoring and obtaining information from various channels and data sources that a webapp can draw on, including:
 
-- interval
+- Interval
 - DOM events
 - Change of cookie value 🍪 
 - Change of (local/session)storage item value

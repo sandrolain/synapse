@@ -6,7 +6,7 @@ export type ReleaseFunction<T=any> = (data: T, release: ReleaseExecutionFunction
 
 // TODO: docs
 // TODO: test
-export function emitterReleaser<T=any> (emitter: Emitter): ReleaseFunction<any> {
+export function emitterReleaser<T=any> (emitter: Emitter): ReleaseFunction<T> {
   let releaserFunction: () => void;
   emitter.subscribe(() => {
     if(releaserFunction) {
@@ -22,7 +22,7 @@ export function emitterReleaser<T=any> (emitter: Emitter): ReleaseFunction<any> 
 
 // TODO: docs
 // TODO: test
-export function delayReleaser<T=any> (time: number): ReleaseFunction<any> {
+export function delayReleaser<T=any> (time: number): ReleaseFunction<T> {
   return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
     window.setTimeout(() => releaser(data), time);
   };
@@ -30,7 +30,7 @@ export function delayReleaser<T=any> (time: number): ReleaseFunction<any> {
 
 // TODO: docs
 // TODO: test
-export function debounceReleaser<T=any> (time: number): ReleaseFunction<any> {
+export function debounceReleaser<T=any> (time: number): ReleaseFunction<T> {
   let emitterTO: number;
   return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
     if(emitterTO) {
@@ -42,7 +42,7 @@ export function debounceReleaser<T=any> (time: number): ReleaseFunction<any> {
 
 // TODO: docs
 // TODO: test
-export function timeoutReleaser<T=any> (time: number): ReleaseFunction<any> {
+export function timeoutReleaser<T=any> (time: number): ReleaseFunction<T> {
   let emitterTO: number = null;
   return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
     if(emitterTO === null) {
@@ -57,7 +57,7 @@ export function timeoutReleaser<T=any> (time: number): ReleaseFunction<any> {
 
 // TODO: docs
 // TODO: test
-export function countReleaser<T=any> (max: number, start: number = 0): ReleaseFunction<any> {
+export function countReleaser<T=any> (max: number, start: number = 0): ReleaseFunction<T> {
   let count: number = start;
   return (data: T, releaser: ReleaseExecutionFunction<T>): void => {
     if(++count >= max) {
@@ -70,7 +70,7 @@ export function countReleaser<T=any> (max: number, start: number = 0): ReleaseFu
 
 // TODO: docs
 // TODO: test
-export function lengthReleaser<T=any> (max: number): ReleaseFunction<any> {
+export function lengthReleaser<T=any> (max: number): ReleaseFunction<T[]> {
   return (data: T[], releaser: ReleaseExecutionFunction<T[]>): void => {
     if(data.length === max) {
       releaser(data);

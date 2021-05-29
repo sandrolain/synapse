@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for synapses">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -40,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -51,11 +50,6 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
 			<h1>synapses</h1>
 		</div>
 	</div>
@@ -71,7 +65,7 @@
 				<p>Processing information creates a chain of observable nodes that you can subscribe to.</p>
 				<p>The library is also available of some methods for monitoring and obtaining information from various channels and data sources that a webapp can draw on, including:</p>
 				<ul>
-					<li>interval</li>
+					<li>Interval</li>
 					<li>DOM events</li>
 					<li>Change of cookie value 🍪 </li>
 					<li>Change of (local/session)storage item value</li>
@@ -87,35 +81,38 @@
 				<a href="#as-typescript-module" id="as-typescript-module" style="color: inherit; text-decoration: none;">
 					<h3>As TypeScript module</h3>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-comment">/// import specific methods or classes</span>
-<span class="hljs-keyword">import</span> { Emitter, fromListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"synapses"</span>;
-<span class="hljs-comment">// ...</span>
+				<pre><code class="language-typescript"><span style="color: #008000">/// import specific methods or classes</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Emitter</span><span style="color: #000000">, </span><span style="color: #001080">fromListener</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">;</span>
+<span style="color: #008000">// ...</span>
 
-<span class="hljs-comment">// or entire library</span>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> synapses <span class="hljs-keyword">from</span> <span class="hljs-string">"synapses"</span>;
-<span class="hljs-comment">// ...</span></code></pre>
+<span style="color: #008000">// or entire library</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">synapses</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">;</span>
+<span style="color: #008000">// ...</span>
+</code></pre>
 				<a href="#as-browser-ecmascript-module" id="as-browser-ecmascript-module" style="color: inherit; text-decoration: none;">
 					<h3>As browser EcmaScript module</h3>
 				</a>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"module"</span>&gt;</span><span class="javascript">
-<span class="hljs-comment">/// import specific methods or classes</span>
-<span class="hljs-keyword">import</span> { Emitter, fromListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./synapses/esm/index.js"</span>;
-<span class="hljs-comment">// ...</span>
+				<pre><code class="language-html"><span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">type</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;module&quot;</span><span style="color: #800000">&gt;</span>
+<span style="color: #008000">/// import specific methods or classes</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000FF"> { </span><span style="color: #001080">Emitter</span><span style="color: #000000FF">, </span><span style="color: #001080">fromListener</span><span style="color: #000000FF"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;./synapses/esm/index.js&quot;</span><span style="color: #000000FF">;</span>
+<span style="color: #008000">// ...</span>
 
-<span class="hljs-comment">// or entire library</span>
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> synapses <span class="hljs-keyword">from</span> <span class="hljs-string">"./synapses/esm/index.js"</span>;
-<span class="hljs-comment">// ...</span>
-</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<span style="color: #008000">// or entire library</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000FF"> </span><span style="color: #0000FF">*</span><span style="color: #000000FF"> </span><span style="color: #AF00DB">as</span><span style="color: #000000FF"> </span><span style="color: #001080">synapses</span><span style="color: #000000FF"> </span><span style="color: #AF00DB">from</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;./synapses/esm/index.js&quot;</span><span style="color: #000000FF">;</span>
+<span style="color: #008000">// ...</span>
+<span style="color: #800000">&lt;/script&gt;</span>
+</code></pre>
 				<a href="#as-commonjsnodejs-module" id="as-commonjsnodejs-module" style="color: inherit; text-decoration: none;">
 					<h3>As commonjs/node.js module</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">/// import specific methods or classes</span>
-<span class="hljs-keyword">const</span> { Emitter, fromListener } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"synapses"</span>);
-<span class="hljs-comment">// ...</span>
+				<pre><code class="language-javascript"><span style="color: #008000">/// import specific methods or classes</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">Emitter</span><span style="color: #000000">, </span><span style="color: #0070C1">fromListener</span><span style="color: #000000"> } = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">);</span>
+<span style="color: #008000">// ...</span>
 
-<span class="hljs-comment">// or entire library</span>
-<span class="hljs-keyword">const</span> synapses = <span class="hljs-built_in">require</span>(<span class="hljs-string">"synapses"</span>);
-<span class="hljs-comment">// ...</span></code></pre>
+<span style="color: #008000">// or entire library</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">synapses</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">);</span>
+<span style="color: #008000">// ...</span>
+</code></pre>
 				<hr>
 				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
 					<h2>Documentation</h2>
@@ -151,17 +148,17 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_index_.html">&quot;index&quot;</a>
+						<a href="modules/index.html">index</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_initiators_.html">&quot;initiators&quot;</a>
+						<a href="modules/initiators.html">initiators</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_releasers_.html">&quot;releasers&quot;</a>
+						<a href="modules/releasers.html">releasers</a>
 					</li>
 				</ul>
 			</nav>
@@ -196,6 +193,5 @@
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
