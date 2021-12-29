@@ -177,7 +177,6 @@ describe("Emitter instance", () => {
 
   it("Emitter reply cache", done => {
     const emitter = new Emitter<TestData>({
-      replay: true,
       replayMax: 2
     });
 
@@ -190,7 +189,7 @@ describe("Emitter instance", () => {
     prom.then(() => {
       const passedData: TestData[] = [];
 
-      emitter.subscribe(data => {
+      emitter.subscribeAndReplay(data => {
         passedData.push(data);
       });
 
@@ -278,7 +277,33 @@ describe("Emitter instance", () => {
     });
   });
 
-  it("emitter.thenDispatch()", done => {
+  it("emitter.unpack()", done => {
+    const emitter = new Emitter<NumberData>();
+
+    const latestData: number[] = [];
+
+    emitter.cache(2).unpack()
+      .map((item) => item.value)
+      .subscribe((item) => {
+        latestData.push(item);
+      });
+
+      const prom = emitter.emitAll([
+        { value: 4 },
+        { value: 8 },
+        { value: 15 },
+        { value: 16 }
+      ]);
+
+      prom.then(() => {
+        expect(latestData).toEqual([
+          4, 4, 8, 8, 15, 15, 16
+        ]);
+        done();
+      });
+  });
+
+  it("emitter.dispatchEvent()", done => {
     const emitter = new Emitter();
     const $el = document.createElement("div");
 
@@ -289,7 +314,7 @@ describe("Emitter instance", () => {
 
     $el.addEventListener("custom", listener);
 
-    emitter.thenDispatch("custom", $el);
+    emitter.dispatchEvent("custom", $el);
 
     emitter.emit({ foo: "bar" });
   });

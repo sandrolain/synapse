@@ -5,13 +5,15 @@ export type ReduceFunction<A=any, B=any> = (accumulatorData: B, itemData: A) => 
 export type FilterFunction<T=any> = (data: T) => boolean;
 export type MappingFunction<A=any, B=any> = (data: A) => B;
 
+type Unboxed<T> =
+    T extends (infer U)[]
+        ? U
+        : T;
 
 /**
  * Interface for options accepted by Emitter constructor
  */
 export interface EmitterOptions {
-  /** Enable the cache of emitted values. New subscribers receives the replay of previously emitted values */
-  replay?: boolean;
   /** Max number of emitted values to cache.
    * After the limit is reached oldest value is dropped and newer is inserted */
   replayMax?: number;
@@ -46,7 +48,6 @@ export class Subscription<T> {
 export class Emitter<T=any> {
   private subscriptions: Set<Subscriber<T>> = new Set();
   private options: EmitterOptions = {
-    replay: false,
     replayMax: 0,
     startCallback: null,
     stopCallback: null
@@ -83,7 +84,6 @@ export class Emitter<T=any> {
    */
   private getChildEmitter<R> (): Emitter<R> {
     return new Emitter({
-      replay: this.options.replay,
       replayMax: this.options.replayMax
     });
   }
@@ -99,11 +99,21 @@ export class Emitter<T=any> {
 
     this.subscriptions.add(subscriber);
 
+    return new Subscription<T>(this, subscriber);
+  }
+
+  /**
+   * Add the passed {@link Subscriber} to the list of subscriptions that can receive the propagated data and replay latest value
+   * @param subscriber The *Subscriber* to add
+   */
+  subscribeAndReplay (subscriber: Subscriber<T>): Subscription<T> {
+    const subscription = this.subscribe(subscriber);
+
     for(const data of this.replayCache) {
-      this.propagateEmit(subscriber, data);
+      this.propagateEmit(subscription.subscriber, data);
     }
 
-    return new Subscription<T>(this, subscriber);
+    return subscription;
   }
 
   /**
@@ -154,10 +164,8 @@ export class Emitter<T=any> {
     if(data instanceof Promise) {
       data = await data;
     }
-    if(this.options.replay) {
-      this.replayCache.push(data);
-      this.updateReplayCache();
-    }
+    this.replayCache.push(data);
+    this.updateReplayCache();
     for(const sub of this.subscriptions) {
       this.propagateEmit(sub, data);
     }
@@ -281,6 +289,38 @@ export class Emitter<T=any> {
   }
 
   /**
+   * Generate a new {@link Emitter} that receive an array of cached data with a max size specified by function argument
+   * @param cacheSize The max size for output cache array (default = 1)
+   */
+  cache (cacheSize: number = 1): Emitter<T[]> {
+    const emitter = this.getChildEmitter<T[]>();
+    let cacheData: T[] = [];
+    this.subscribe((data: any) => {
+      cacheData.push(data);
+      cacheData = cacheData.slice(-cacheSize);
+      emitter.emit(cacheData);
+    });
+    return emitter;
+  }
+
+  /**
+   * Generate a new {@link Emitter} that receive each element of source data if it is an array or the same data if not
+   */
+  unpack (): Emitter<Unboxed<T>> {
+    const emitter = this.getChildEmitter<Unboxed<T>>();
+    this.subscribe((data: T) => {
+      if(data instanceof Array) {
+        for(const item of data) {
+          emitter.emit(item);
+        }
+      } else {
+        emitter.emit(data as Unboxed<T>);
+      }
+    });
+    return emitter;
+  }
+
+  /**
    * Starts data output for Emitter generated from external data sources
    */
   start (): Emitter<T> {
@@ -305,7 +345,7 @@ export class Emitter<T=any> {
    * @param eventName The name of the DOM event to be dispatched
    * @param target The *Window*, *Document* or *HTMLElement* instance towards which to dispatch the event. Default: current *window*
    */
-  thenDispatch (eventName: string, target: Window | Document | HTMLElement = window): Subscription<T> {
+  dispatchEvent (eventName: string, target: Window | Document | HTMLElement = window): Subscription<T> {
     return this.subscribe((data: T) => {
       const event = new CustomEvent(eventName, {
         detail: data,
