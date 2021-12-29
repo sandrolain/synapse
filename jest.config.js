@@ -30,7 +30,7 @@ module.exports = {
   testEnvironment: "jsdom",
   globals: {
     "ts-jest": {
-      tsConfig: compilerOptions
+      tsconfig: compilerOptions
     }
   }
 };
