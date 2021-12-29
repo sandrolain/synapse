@@ -1,197 +1,78 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>synapses</title>
-	<meta name="description" content="Documentation for synapses">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">synapses</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>synapses</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<p><img src="https://raw.githubusercontent.com/sandrolain/synapses/bfd1dd3772c0aa7b8356da7404eeffac06c73174/assets/logo.svg?sanitize=true" alt="synapses" title="synapses"></p>
-				<p align="center">Light library for data propagation</p>
-				<hr>
-				<p>Synapses provides a <strong>light reactive communication system</strong> based on observables instances called <em>Emitter</em>, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to <strong>filter, manipulate and forward</strong> them to other instances observable or other subjects.</p>
-				<p>Processing information creates a chain of observable nodes that you can subscribe to.</p>
-				<p>The library is also available of some methods for monitoring and obtaining information from various channels and data sources that a webapp can draw on, including:</p>
-				<ul>
-					<li>Interval</li>
-					<li>DOM events</li>
-					<li>Change of cookie value 🍪 </li>
-					<li>Change of (local/session)storage item value</li>
-					<li>Change parameter query string</li>
-					<li>Receiving WebSocket messages</li>
-					<li>HTTP fetch polling</li>
-					<li>Custom value watchers</li>
-				</ul>
-				<hr>
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h2>Usage</h2>
-				</a>
-				<a href="#as-typescript-module" id="as-typescript-module" style="color: inherit; text-decoration: none;">
-					<h3>As TypeScript module</h3>
-				</a>
-				<pre><code class="language-typescript"><span style="color: #008000">/// import specific methods or classes</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Emitter</span><span style="color: #000000">, </span><span style="color: #001080">fromListener</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">;</span>
-<span style="color: #008000">// ...</span>
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>synapses</title><meta name="description" content="Documentation for synapses"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">synapses</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>synapses</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography"><p><img src="https://raw.githubusercontent.com/sandrolain/synapses/bfd1dd3772c0aa7b8356da7404eeffac06c73174/assets/logo.svg?sanitize=true" alt="synapses" title="synapses"></p>
+<p align="center">Light library for data propagation</p>
 
-<span style="color: #008000">// or entire library</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">synapses</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">;</span>
-<span style="color: #008000">// ...</span>
-</code></pre>
-				<a href="#as-browser-ecmascript-module" id="as-browser-ecmascript-module" style="color: inherit; text-decoration: none;">
-					<h3>As browser EcmaScript module</h3>
-				</a>
-				<pre><code class="language-html"><span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">type</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;module&quot;</span><span style="color: #800000">&gt;</span>
-<span style="color: #008000">/// import specific methods or classes</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000FF"> { </span><span style="color: #001080">Emitter</span><span style="color: #000000FF">, </span><span style="color: #001080">fromListener</span><span style="color: #000000FF"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;./synapses/esm/index.js&quot;</span><span style="color: #000000FF">;</span>
-<span style="color: #008000">// ...</span>
+<hr>
+<p>Synapses provides a <strong>light reactive communication system</strong> based on observables instances called <em>Emitter</em>, which allow the notification and asynchronous exchange of information packets within a webapp, and provide a series of tools to <strong>filter, manipulate and forward</strong> them to other instances observable or other subjects.</p>
+<p>Processing information creates a chain of observable nodes that you can subscribe to.</p>
+<p>The library is also available of some methods for monitoring and obtaining information from various channels and data sources that a webapp can draw on, including:</p>
+<ul>
+<li>Interval</li>
+<li>DOM events</li>
+<li>Change of cookie value 🍪 </li>
+<li>Change of (local/session)storage item value</li>
+<li>Change parameter query string</li>
+<li>Receiving WebSocket messages</li>
+<li>HTTP fetch polling</li>
+<li>Custom value watchers</li>
+</ul>
+<hr>
 
-<span style="color: #008000">// or entire library</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000FF"> </span><span style="color: #0000FF">*</span><span style="color: #000000FF"> </span><span style="color: #AF00DB">as</span><span style="color: #000000FF"> </span><span style="color: #001080">synapses</span><span style="color: #000000FF"> </span><span style="color: #AF00DB">from</span><span style="color: #000000FF"> </span><span style="color: #A31515">&quot;./synapses/esm/index.js&quot;</span><span style="color: #000000FF">;</span>
-<span style="color: #008000">// ...</span>
-<span style="color: #800000">&lt;/script&gt;</span>
-</code></pre>
-				<a href="#as-commonjsnodejs-module" id="as-commonjsnodejs-module" style="color: inherit; text-decoration: none;">
-					<h3>As commonjs/node.js module</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">/// import specific methods or classes</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">Emitter</span><span style="color: #000000">, </span><span style="color: #0070C1">fromListener</span><span style="color: #000000"> } = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">);</span>
-<span style="color: #008000">// ...</span>
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
+</a>
 
-<span style="color: #008000">// or entire library</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">synapses</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;synapses&quot;</span><span style="color: #000000">);</span>
-<span style="color: #008000">// ...</span>
+<a href="#as-typescript-module" id="as-typescript-module" style="color: inherit; text-decoration: none;">
+  <h3>As TypeScript module</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">/// import specific methods or classes</span><br/><span class="hl-1">import</span><span class="hl-2"> { </span><span class="hl-3">Emitter</span><span class="hl-2">, </span><span class="hl-3">fromListener</span><span class="hl-2"> } </span><span class="hl-1">from</span><span class="hl-2"> </span><span class="hl-4">&quot;synapses&quot;</span><span class="hl-2">;</span><br/><span class="hl-0">// ...</span><br/><br/><span class="hl-0">// or entire library</span><br/><span class="hl-1">import</span><span class="hl-2"> </span><span class="hl-5">*</span><span class="hl-2"> </span><span class="hl-1">as</span><span class="hl-2"> </span><span class="hl-3">synapses</span><span class="hl-2"> </span><span class="hl-1">from</span><span class="hl-2"> </span><span class="hl-4">&quot;synapses&quot;</span><span class="hl-2">;</span><br/><span class="hl-0">// ...</span>
 </code></pre>
-				<hr>
-				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
-					<h2>Documentation</h2>
-				</a>
-				<p>Documentation with examples can be found <a href="https://sandrolain.github.io/synapses/typedocs/modules/_index_.html">clicking here</a></p>
-				<hr>
-				<a href="#build-types-available" id="build-types-available" style="color: inherit; text-decoration: none;">
-					<h2>Build types available</h2>
-				</a>
-				<p>This package is written in TypeScript and the build includes type definitions for use in other TypeScript projects.<br>The build of this package generates two versions:</p>
-				<ul>
-					<li><strong>ES Module</strong>: For use in TypeScript or web projects for browsers that support ES6 modules. Using ES6 import in projects based on node.js (including TypeScript) it allows during the bundling phase (via webpack, rollup or equivalent) to perform the tree-shaking of the dependencies and have a lighter bundle.</li>
-					<li><strong>Universal Module Definition</strong>: To be used directly in projects based on node.js, or into web projects callable via global variable or via requirejs</li>
-				</ul>
-				<hr>
-				<a href="#status" id="status" style="color: inherit; text-decoration: none;">
-					<h2>Status</h2>
-				</a>
-				<table><thead><tr><th>master</th><th>develop</th></tr></thead><tbody><tr><td>
-								<p><a href="https://travis-ci.org/sandrolain/synapses"><img src="https://travis-ci.org/sandrolain/synapses.svg?branch=master" alt="Build Status"></a></p>
-								</td><td>
-								<p><a href="https://travis-ci.org/sandrolain/synapses"><img src="https://travis-ci.org/sandrolain/synapses.svg?branch=develop" alt="Build Status"></a></p>
-				</td></tr></tbody></table>
-				<hr>
-				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-					<h2>License</h2>
-				</a>
-				<p><a href="./LICENSE"><img src="https://img.shields.io/github/license/sandrolain/synapses" alt="MIT"></a></p>
-				<hr>
-				<p><a href="https://www.sandrolain.com/">Sandro Lain</a></p>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/index.html">index</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/initiators.html">initiators</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/releasers.html">releasers</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+
+<a href="#as-browser-ecmascript-module" id="as-browser-ecmascript-module" style="color: inherit; text-decoration: none;">
+  <h3>As browser EcmaScript module</h3>
+</a>
+<pre><code class="language-html"><span class="hl-6">&lt;</span><span class="hl-7">script</span><span class="hl-8"> </span><span class="hl-9">type</span><span class="hl-8">=</span><span class="hl-10">&quot;module&quot;</span><span class="hl-6">&gt;</span><br/><span class="hl-0">/// import specific methods or classes</span><br/><span class="hl-1">import</span><span class="hl-8"> { </span><span class="hl-3">Emitter</span><span class="hl-8">, </span><span class="hl-3">fromListener</span><span class="hl-8"> } </span><span class="hl-1">from</span><span class="hl-8"> </span><span class="hl-4">&quot;./synapses/esm/index.js&quot;</span><span class="hl-8">;</span><br/><span class="hl-0">// ...</span><br/><br/><span class="hl-0">// or entire library</span><br/><span class="hl-1">import</span><span class="hl-8"> </span><span class="hl-5">*</span><span class="hl-8"> </span><span class="hl-1">as</span><span class="hl-8"> </span><span class="hl-3">synapses</span><span class="hl-8"> </span><span class="hl-1">from</span><span class="hl-8"> </span><span class="hl-4">&quot;./synapses/esm/index.js&quot;</span><span class="hl-8">;</span><br/><span class="hl-0">// ...</span><br/><span class="hl-6">&lt;/</span><span class="hl-7">script</span><span class="hl-6">&gt;</span>
+</code></pre>
+
+<a href="#as-commonjsnodejs-module" id="as-commonjsnodejs-module" style="color: inherit; text-decoration: none;">
+  <h3>As commonjs/node.js module</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-0">/// import specific methods or classes</span><br/><span class="hl-5">const</span><span class="hl-2"> { </span><span class="hl-11">Emitter</span><span class="hl-2">, </span><span class="hl-11">fromListener</span><span class="hl-2"> } = </span><span class="hl-12">require</span><span class="hl-2">(</span><span class="hl-4">&quot;synapses&quot;</span><span class="hl-2">);</span><br/><span class="hl-0">// ...</span><br/><br/><span class="hl-0">// or entire library</span><br/><span class="hl-5">const</span><span class="hl-2"> </span><span class="hl-11">synapses</span><span class="hl-2"> = </span><span class="hl-12">require</span><span class="hl-2">(</span><span class="hl-4">&quot;synapses&quot;</span><span class="hl-2">);</span><br/><span class="hl-0">// ...</span>
+</code></pre>
+<hr>
+
+<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+  <h2>Documentation</h2>
+</a>
+<p>Documentation with examples can be found <a href="https://sandrolain.github.io/synapses/docs/typedocs/index.html">clicking here</a></p>
+<hr>
+
+<a href="#build-types-available" id="build-types-available" style="color: inherit; text-decoration: none;">
+  <h2>Build types available</h2>
+</a>
+<p>This package is written in TypeScript and the build includes type definitions for use in other TypeScript projects.<br>The build of this package generates two versions:</p>
+<ul>
+<li><strong>ES Module</strong>: For use in TypeScript or web projects for browsers that support ES6 modules. Using ES6 import in projects based on node.js (including TypeScript) it allows during the bundling phase (via webpack, rollup or equivalent) to perform the tree-shaking of the dependencies and have a lighter bundle.</li>
+<li><strong>Universal Module Definition</strong>: To be used directly in projects based on node.js, or into web projects callable via global variable or via requirejs</li>
+</ul>
+<hr>
+
+<a href="#status" id="status" style="color: inherit; text-decoration: none;">
+  <h2>Status</h2>
+</a>
+<table><thead><tr><th>master</th><th>develop</th></tr></thead><tbody><tr><td>
+
+<p><a href="https://travis-ci.org/sandrolain/synapses"><img src="https://travis-ci.org/sandrolain/synapses.svg?branch=master" alt="Build Status"></a></p>
+</td><td>
+
+<p><a href="https://travis-ci.org/sandrolain/synapses"><img src="https://travis-ci.org/sandrolain/synapses.svg?branch=develop" alt="Build Status"></a></p>
+</td></tr></tbody></table>
+
+<hr>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h2>License</h2>
+</a>
+<p><a href="./LICENSE"><img src="https://img.shields.io/github/license/sandrolain/synapses" alt="MIT"></a></p>
+<hr>
+<p><a href="https://www.sandrolain.com/">Sandro Lain</a></p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Emitter.html" class="tsd-kind-icon">Emitter</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Subscription.html" class="tsd-kind-icon">Subscription</a></li><li class="tsd-kind-interface"><a href="interfaces/EmitterOptions.html" class="tsd-kind-icon">Emitter<wbr/>Options</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#FilterFunction" class="tsd-kind-icon">Filter<wbr/>Function</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#MappingFunction" class="tsd-kind-icon">Mapping<wbr/>Function</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#ReduceFunction" class="tsd-kind-icon">Reduce<wbr/>Function</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#Subscriber" class="tsd-kind-icon">Subscriber</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>

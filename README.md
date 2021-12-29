@@ -65,7 +65,7 @@ const synapses = require("synapses");
 
 ## Documentation
 
-Documentation with examples can be found [clicking here](https://sandrolain.github.io/synapses/typedocs/modules/_index_.html)
+Documentation with examples can be found [clicking here](https://sandrolain.github.io/synapses/docs/typedocs/index.html)
 
 ---
 
